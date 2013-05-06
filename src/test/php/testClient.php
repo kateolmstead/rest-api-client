@@ -1,24 +1,29 @@
 <?php
 
-require_once '../src/PlaynomicsApiClient.php';
-require_once '../src/TransactionCurrency.php';
-require_once '../src/TransactionCurrencyCode.php';
-require_once '../src/TransactionType.php';
+require_once '../../main/php/PlaynomicsApiClient.php';
+require_once '../../main/php/TransactionCurrency.php';
+require_once '../../main/php/TransactionCurrencyCode.php';
+require_once '../../main/php/TransactionType.php';
 
 function main() {
-    $app_id = "";
-    $app_secret = "";
+    date_default_timezone_set('UTC');
+
+    $json = file_get_contents("../resources/config.json");
+    $config = json_decode($json);
+
+    $app_id = $config->app_id;
+    $api_key = $config->api_key;
     $player_one_id = 1;
 
     $player_two_email = "player2@gmail.com";
     //set up the proxy to send requests through Charles Proxy
     $proxy = "localhost:8888";
-    $api_client = new PlaynomicsApiClient($app_id, $app_secret, $proxy);
+    $api_client = new PlaynomicsApiClient($app_id, $api_key, $proxy);
    
     $api_client->test_mode = true;
 
     //start a session
-    $session_id = 1;
+    $session_id = 10;
 
     $args = array(
         "user_id" => $player_one_id,
@@ -29,7 +34,7 @@ function main() {
     $api_client->sessionStart($args);
 
     //start a game
-    $instance_id = 1;
+    $instance_id = 100;
 
     $args = array(
         "user_id" => $player_one_id,
@@ -37,7 +42,7 @@ function main() {
         "instance_id" => $instance_id,
         "site" => "http://awesomegames.com/mmorpg",
         "type" => "mmorpg",
-        "game_id" => 1
+        "game_id" => "game_id"
     );
 
     echo "gameStart with args : ".var_dump($args);

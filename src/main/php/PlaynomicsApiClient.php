@@ -1,14 +1,14 @@
 <?php
 class PlaynomicsApiClient {
     private $app_id;
-    private $app_secret;
+    private $api_key;
     private $proxy;
 
     public $test_mode = false;
 
-    public function __construct($app_id, $app_secret, $proxy = null) {
+    public function __construct($app_id, $api_key, $proxy = null) {
         $this->app_id = $app_id;
-        $this->app_secret = $app_secret;
+        $this->api_key = $api_key;
         $this->proxy = $proxy;
     }
 
@@ -166,7 +166,7 @@ class PlaynomicsApiClient {
 
         }
 
-        $signature = hash_hmac("sha256", $path, $this->app_secret);
+        $signature = hash_hmac("sha256", $path, $this->api_key);
         $path .= ($has_params ? "&" : "?") . "sig=" . $signature;
 
         $request_url = $base_url . $path;
