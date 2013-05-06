@@ -1,17 +1,15 @@
 <?php
-require "TransactionCurrency.php";
-
-public class PlaynomicsApiClient {
+class PlaynomicsApiClient {
     private $app_id;
     private $app_secret;
-    private $http_options;
+    private $proxy;
 
     public $test_mode = false;
 
-    public function __construct($app_id, $app_secret, $http_options = null) {
+    public function __construct($app_id, $app_secret, $proxy = null) {
         $this->app_id = $app_id;
         $this->app_secret = $app_secret;
-        $this->http_options = $http_options;
+        $this->proxy = $proxy;
     }
 
     public function sessionStart($args) {
@@ -21,7 +19,6 @@ public class PlaynomicsApiClient {
         $params["ss"] = $this->coaleseValue($args, "site");
         return $this->sendRequest($path, $params);
     }
-
 
     public function sessionEnd($args) {
         $path = "/v1/sessionEnd";
@@ -130,7 +127,7 @@ public class PlaynomicsApiClient {
         return array(
             "a" => $this->app_id,
             "u" => $user_id,
-            "t" => getTimeStamp()
+            "t" => $this->getTimeStamp()
         );
     }
 
@@ -145,40 +142,55 @@ public class PlaynomicsApiClient {
         return $time;
     }
 
-    private coaleseValue($array, $key) {
+    private function coaleseValue($array, $key) {
         return array_key_exists($key, $array) ? $array[$key] : null;
     }
 
     private function sendRequest($path, $query_params) {
         $base_url = $this->test_mode 
-            ? "http://api.b.playnomics.com" 
-            : "http://api.a.playnomics.com";
+            ? "http://api.b.playnomics.net" 
+            : "http://api.a.playnomics.net";
         
         $has_params = $query_params && count($query_params) > 0;
         
         if($has_params) {
             //sort the array by its keys
             ksort($query_params);
-            $path .= "?";
+            $first_param = true;
             foreach($query_params as $key => $value) {
-                if($key && $key != "" && $value && $value != ""){
-                    $path .= "&". urlencode($key) . "=".urlencode($value);
+                if(isset($value) && $value != ""){
+                    $path .=  ($first_param ? "?" : "&") . urlencode($key) . "=" . urlencode($value);
+                    $first_param = false;
                 }
             }
+
         }
 
         $signature = hash_hmac("sha256", $path, $this->app_secret);
         $path .= ($has_params ? "&" : "?") . "sig=" . $signature;
 
         $request_url = $base_url . $path;
-        
-        $response = $this->http_options
-            ? http_get($request_url, $this->http_options) 
-            : http_get($request_url);
+            
+        $curl_get = curl_init();
+        curl_setopt_array($curl_get, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $request_url,
+            //fail on anything where the HTTP status code is 400 or higher 
+            CURLOPT_FAILONERROR => 1
+        ));
+
+        if($this->proxy){
+            curl_setopt($curl_get, CURLOPT_PROXY, $this->proxy);
+        }
+            
+        $response = curl_exec($curl_get);
 
         if(!$response) {
             error_log("Could not make request to " . $request_url);
+            error_log('Error: "' . curl_error($curl_get) . '" - Code: ' . curl_errno($curl_get));
         }
+
+        curl_close($curl_get);
         return $response;
     }
 }

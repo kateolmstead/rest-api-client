@@ -1,16 +1,16 @@
 <?php
-public class TransactionType {
-    public const BuyItem = "BuyItem";
-    public const SellItem = "SellItem";
-    public const ReturnItem = "ReturnItem";
-    public const BuyService = "BuyService";
-    public const SellService = "SellService";
-    public const ReturnService = "ReturnService";
-    public const CurrencyConvert = "CurrencyConvert";
-    public const Initial = "Initial";
-    public const Free = "Free";
-    public const Reward = "Reward";
-    public const GiftSend = "GiftSend";
-    public const GiftReceive = "GiftReceive";
+class TransactionType {
+    const BuyItem = "BuyItem";
+    const SellItem = "SellItem";
+    const ReturnItem = "ReturnItem";
+    const BuyService = "BuyService";
+    const SellService = "SellService";
+    const ReturnService = "ReturnService";
+    const CurrencyConvert = "CurrencyConvert";
+    const Initial = "Initial";
+    const Free = "Free";
+    const Reward = "Reward";
+    const GiftSend = "GiftSend";
+    const GiftReceive = "GiftReceive";
 }
 ?>
