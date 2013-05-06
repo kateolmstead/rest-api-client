@@ -12,46 +12,6 @@ class PlaynomicsApiClient {
         $this->proxy = $proxy;
     }
 
-    public function sessionStart($args) {
-        $path = "/v1/sessionStart";
-        $params = $this->getDefaultParams($args["user_id"]);
-        $params["s"] = $args["session_id"];
-        $params["ss"] = $this->coaleseValue($args, "site");
-        return $this->sendRequest($path, $params);
-    }
-
-    public function sessionEnd($args) {
-        $path = "/v1/sessionEnd";
-
-        $params = $this->getDefaultParams($args["user_id"]);
-        $params["s"] = $args["session_id"];
-        $params["r"] = $this->coaleseValue($args, "reason");
-        return $this->sendRequest($path, $params);
-    }
-    
-    public function gameStart($args) {
-        $path = "/v1/gameStart";
-
-        $params = $this->getDefaultParams($args["user_id"]);
-        
-        $params["g"] = $this->coaleseValue($args, "instance_id");
-        $params["s"] = $this->coaleseValue($args, "session_id");
-        $params["ss"] = $this->coaleseValue($args, "site");
-        $params["gi"] = $this->coaleseValue($args, "game_id");
-        $params["gt"] = $this->coaleseValue($args, "type");
-        return $this->sendRequest($path, $params);
-    }
-
-    public function gameEnd($args) {
-        $path = "/v1/gameEnd";
-
-        $params = $this->getDefaultParams($args["user_id"]);
-        $params["g"] = $this->coaleseValue($args, "instance_id");
-        $params["s"] = $this->coaleseValue($args, "session_id");
-        $params["gr"] = $this->coaleseValue($args, "reason");
-        return $this->sendRequest($path, $params);
-    }
-
     public function transaction($args) {
         $path = "/v1/transaction";
 
@@ -167,7 +127,7 @@ class PlaynomicsApiClient {
         }
 
         $signature = hash_hmac("sha256", $path, $this->api_key);
-        $path .= ($has_params ? "&" : "?") . "sig=" . $signature;
+        $path .= ($has_params ? "&" : "?") . "sig=" . urlencode($signature);
 
         $request_url = $base_url . $path;
             
