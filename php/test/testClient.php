@@ -1,8 +1,9 @@
 <?php
 
-require '../src/PlaynomicsApiClient.php';
-require '../src/TransactionCurrency.php';
-require '../src/TransactionType.php';
+require_once '../src/PlaynomicsApiClient.php';
+require_once '../src/TransactionCurrency.php';
+require_once '../src/TransactionCurrencyCode.php';
+require_once '../src/TransactionType.php';
 
 function main() {
     $app_id = "";
@@ -10,12 +11,9 @@ function main() {
     $player_one_id = 1;
 
     $player_two_email = "player2@gmail.com";
-
-    $api_client = new PlaynomicsApiClient($app_id, $app_secret, $http_options);
     //set up the proxy to send requests through Charles Proxy
-    $http_options = array(
-        "proxyhost" => "localhost:1088"
-    );
+    $proxy = "localhost:8888";
+    $api_client = new PlaynomicsApiClient($app_id, $app_secret, $proxy);
    
     $api_client->test_mode = true;
 
@@ -38,7 +36,7 @@ function main() {
         "session_id" => $session_id,
         "instance_id" => $instance_id,
         "site" => "http://awesomegames.com/mmorpg",
-        "type" => "mmorpg"
+        "type" => "mmorpg",
         "game_id" => 1
     );
 
@@ -151,7 +149,7 @@ function main() {
         "country" => "USA",
         "subdivision" => "94131",
         "sex" => "F",
-        "birth_year" = 1980,
+        "birth_year" => 1980,
         "source" => "invitation",
         "source_user" => $player_one_id
     );
@@ -164,7 +162,7 @@ function main() {
         "session_id" => $session_id,
         "instance_id" => $instance_id,
         "site" => "http://awesomegames.com/mmorpg",
-        "type" => "mmorpg"
+        "type" => "mmorpg",
         "game_id" => 1
     );
 
