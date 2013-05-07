@@ -73,7 +73,7 @@ For every reqest to the API, we always required that you submit the following pa
     </thead>
     <tbody>
         <tr>
-            <td><em>Timestamp</em></td>
+            <td><em>timestamp</em></td>
             <td>32-bit signed integer, 64-bit signed integer, or 64-bit double</td>
             <td>
                 The time an event took place. The value may be one of the following:
@@ -87,12 +87,12 @@ For every reqest to the API, we always required that you submit the following pa
             </td>
         </tr>
         <tr>
-            <td><em>App ID</em></td>
+            <td><em>appId</em></td>
             <td>32-bit signed integer</td>
             <td>Playnomics-assigned identifier for the application in which an event occurred</td>
         </tr>
         <tr>
-            <td><em>User ID</em></td>
+            <td><em>userId</em></td>
             <td>String, 64 char max, UTF-8</td>
             <td>
                 The <em>User ID</em> should be a persistent, anonymized, and unique to each player.
@@ -287,7 +287,7 @@ Query Parameters:
                 Time or date on which this user was first created in the application - could be the time the application was installed, the time at which Facebook permissions were granted, or an application-defined time. If not provided, assumed to be the timestamp of the earliest event for the User Id.
                 Same format as the timestamp parameter (for times).
             </td>
-            <td>pi</td>
+            <td><code>pi</code></td>
         </tr>
     </tbody>
 </table>
@@ -441,7 +441,7 @@ Query Parameters:
                 </ul>
                 Future versions of the API will support a wider range of currencies, e.g., ISO-4217 codes
             </td>
-            <code>tc{N}</code>
+            <td><code>tcN</code></td>
         </tr>
             <td><em>currencyTypeN</em> (0 &lt;= N &lt;= 9)</td>   
             <td>Yes</td>
