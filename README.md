@@ -12,9 +12,16 @@ PlayRM provides game developers with tools for tracking player behavior and enga
 
 <img src="http://www.playnomics.com/wp-content/uploads/2013/03/header-flow-chart-02.png"/>
 
-Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM accross multiple games in conjunction with existing systems eg: payments, registration. In some cases, this may simplify your integration with PlayRM.
+Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM accross multiple games in conjunction with existing systems eg: payments, registration. If you already have an existing game server, this may simplify your integration with PlayRM.
 
-**The engagement module and messaging are not available via the RESTful API. To utilize this functionality, you'll need to implement the appropriate client SDK in your game client.**
+The client SDKs do provide some additional functionality that is not available with a pure server-side integration:
+* Segmented messaging
+* Engagement module which allows PlayRM to track and score player intensity, engagement
+* Geo location of the player, this is important for messaging localization and geographic segmentation.
+
+To utilize this functionality, you'll want to implement the appropriate client-side SDK in your game client (JavaScript, iOS, Unity, Android, etc).
+
+These modules are still available by calling the RESTful API:
 
 * [User Info Module](#demographics-and-install-attribution) - provides basic user information
 * [Monetization Module](#monetization) - tracks various monetization events
@@ -66,32 +73,31 @@ For every reqest to the API, we always required that you submit the following pa
     </thead>
     <tbody>
         <tr>
-            <td><code>Timestamp</code></td>
+            <td><em>Timestamp</em></td>
             <td>32-bit signed integer, 64-bit signed integer, or 64-bit double</td>
             <td>
                 The time an event took place. The value may be one of the following:
-                
                 <ul>
                     <li>Unix epoch time in seconds since Jan 1, 1970 i.e., <em>ssssssssss</em></li>
                     <li>Unix epoch time in seconds since Jan 1, 1970 with milliseconds as a decimal, i.e., <em>ssssssssss.mmm</em></li>
                     <li>Unix epoch time in milliseconds since Jan 1, 1970, i.e., <em>ssssssssssmmm</em></li>
                 </ul>
-                
+
                 Values > 2147483647 or < -2147483648 are assumed to be epoch time in milliseconds and may not contain a decimal component.  To indicate times prior to Jan 1, 1970, use a negative timestamp.
             </td>
         </tr>
         <tr>
-            <td><code>App ID</code></td>
+            <td><em>App ID</em></td>
             <td>32-bit signed integer</td>
             <td>Playnomics-assigned identifier for the application in which an event occurred</td>
         </tr>
         <tr>
-            <td><code>User ID</code></td>
+            <td><em>User ID</em></td>
             <td>String, 64 char max, UTF-8</td>
             <td>
-                The <code>User ID</code> should be a persistent, anonymized, and unique to each player.
+                The <em>User ID</em> should be a persistent, anonymized, and unique to each player.
                 
-                You can also use third-party authorization tool like Facebook or Twitter. However, <strong>you cannot use the user's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <code>User ID</code>.</strong>
+                You can also use third-party authorization tool like Facebook or Twitter. However, <strong>you cannot use the user's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
             </td>
         </tr>
     </tbody>
@@ -167,7 +173,7 @@ The user info module can be called to collect basic demographic and acquisition 
 PlayRM collects all user info events for the same userId and coalesces the information in the events to build an information catalog for that user. In the case of a conflict (such as two events for the same userId with different country parameters), Playnomics uses the information from the event with the most recent timestamp parameter. Since users may have been created prior to instrumentation, it is suggested that you send a user info event at the start of each user's session (e.g., upon login) to update that user's catalog information and to increase coverage of players in the catalog.
 
 API Path: `/v1/userInfo`
-
+Query Parameters:
 <table>
     <thead>
         <tr>
@@ -180,54 +186,39 @@ API Path: `/v1/userInfo`
     </thead>
     <tbody>
         <tr>
-            <td>Timestamp</td>
+            <td><em>timestamp</em></td>
             <td>Yes</td>
             <td>See description above.</td>
             <td>See description above.</td>
             <td><code>t</code></td>
         </tr>
         <tr>
-            <td>App ID</td>
+            <td><em>appId</em></td>
             <td>Yes</td>
             <td>See description above.</td>
             <td>See description above.</td>
             <td><code>a</code></td>
         </tr>
         <tr>
-            <td>User ID</td>
+            <td><em>userId</em></td>
             <td>Yes</td>
             <td>See description above.</td>
             <td>See description above.</td>
             <td><code>u</code></td>
         </tr>
         <tr>
-            <td>Type</td>
+            <td><em>type</em></td>
             <td>Optional</td>
             <td>String</td>
-            <td>Must be update.</td>
+            <td>Must be "update".</td>
             <td><code>pt</code></td>
         </tr>
         <tr>
-            <td>Country</td>
-            <td>Optional</td>
-            <td>String, 2 char max, ASCII</td>
-            <td>2 letter country code, described in <a href="http://en.wikipedia.org/wiki/ISO_3166-1" target="_blank">ISO_3166-1</a></td>
-            <td><code>pc</code></td>
-        </tr>
-        <tr>
-            <td>Subdivision</td>
-            <td>Optional</td>
-            <td>String, 3 char max, ASCII</td>
-            <td>2-3 letter subdivision/state code, described in <a href="http://en.wikipedia.org/wiki/ISO_3166-2" target="_blank">ISO 3166-2</a></td>
-            <td>ps</td>
-        </tr>
-        <tr>
-            <td>Sex</td>
+            <td><em>sex</em></td>
             <td>Optional</td>
             <td>String, 1 character</td>
             <td>
                 The user's sex. Must be one of the following:
-                
                 <ul>
                     <li>M: male</li>
                     <li>F: female</li>
@@ -239,11 +230,11 @@ API Path: `/v1/userInfo`
             <td><code>px</code></td>  
         </tr>
         <tr>
-            <td>Birth Year</td>
+            <td><em>birthYear</em></td>
             <td>Optional</td>
             <td>String, 10 char max</td>
             <td>
-                The user's birthyear (and optionally month).  Must be one of the following formats: 
+                The user's <em>birthYear</em> (and optionally month).  Must be one of the following formats: 
                 <ul>
                     <li>YYYY/MM</li>
                     <li>YYYY-MM</li>
@@ -255,7 +246,7 @@ API Path: `/v1/userInfo`
             <td><code>pb</code></td>
         </tr>
         <tr>
-            <td>Source</td>
+            <td><em>source</em></td>
             <td>Optional</td>
             <td>String, 16 char max, ASCII</td>
             <td>
@@ -271,57 +262,43 @@ API Path: `/v1/userInfo`
             <td><code>po</code></td> 
         </tr>
         <tr>
-            <td>Source Campaign</td>
+            <td><em>sourceCampaign</em></td>
             <td>Optional</td>
             <td>String, 16 char max, ASCII</td>
             <td>Application-defined identifier for the campaign that referred this user</td>
             <td><code>pm</code></td>
         </tr>
         <tr>
-            <td>Source User</td>
+            <td>sourceUser</em></td>
             <td>Optional</td>
             <td>See User Id Common Parameter </td>
-            <td>If the was acquired via a UserReferral, the User Id of the person who initially brought the user into the application</td>
-            <td>pu</td>
+            <td>
+                If the was acquired via a UserReferral, the <em>userId</em> of the person who initially brought the user into the application
+            </td>
+            <td><code>pu</code></td>
         </tr>
         <tr>
-            <td>Install Time</td>
-            <td>32-bit signed integer, 64-bit signed integer, 64-bit double, or String</td>
-            <td>Time or date on which this user was first created in the application - could be the time the application was installed, the time at which Facebook permissions were granted, or an application-defined time. If not provided, assumed to be the timestamp of the earliest event for the User Id.</td>
-            <td>Same format as the timestamp parameter (for times).</td>
+            <td>installTime</em></td>
+            <td>Optional</td>
+            <td>
+                32-bit signed integer, 64-bit signed integer, 64-bit double, or String
+            </td>
+            <td>
+                Time or date on which this user was first created in the application - could be the time the application was installed, the time at which Facebook permissions were granted, or an application-defined time. If not provided, assumed to be the timestamp of the earliest event for the User Id.
+                Same format as the timestamp parameter (for times).
+            </td>
             <td>pi</td>
         </tr>
     </tbody>
 </table>
 
-Example URL Call:
-
-```
-http://api.b.playnomics.net/v1/userInfo?
-    a=4104146557547035721&
-    pb=1980&
-    pc=US&
-    pi=1367896148&
-    pm=UserReferral&
-    po=invitation&
-    ps=US-CA&
-    pt=update&
-    pu=1&
-    px=F&
-    t=1367896148&
-    u=2&
-    sig=cd1eabcca9719172be9206f77b411f05085e8bd2890d2e764c331b4f40805a76
-```
-
-Call with PHP sample client:
+Call with PHP REST Client:
 
 ```php
 //report the demographic info that the player fills out when she joins
 
 $args = array(
     "user_id" => $player_ID,
-    "country" => "US",
-    "subdivision" => "US-CA",
     "sex" => "F",
     "birth_year" => 1980,
     "source" => "invitation",
@@ -332,6 +309,22 @@ $args = array(
 
 $api_client->userInfo($args);
 ```
+
+Resulting HTTP GET:
+```
+http://api.a.playnomics.net/v1/userInfo?
+    a=4104146557547035721&
+    pb=1980&pi=1367945380&
+    pm=UserReferral&
+    po=invitation&
+    pt=update&
+    pu=1&
+    px=F&
+    t=1367945380&
+    u=2&
+    sig=a8234a1a12295c594ec570f94d5b37ca58025dd781f0f110af6b26ab041fb6c7
+```
+
 ## Monetization
 
 PlayRM provides a flexible interface for tracking monetization events. This module should be called every time a player triggers a monetization event. 
@@ -342,6 +335,8 @@ This event tracks users that have monetized and the amount they have spent in to
 * OFD (offer valued in USD)
 or an in-game *virtual* currency.
 
+API Path: `/v1/transaction`
+Query Parameters: 
 <table>
     <thead>
         <tr>
@@ -354,80 +349,90 @@ or an in-game *virtual* currency.
     </thead>
     <tbody>
         <tr>
-            <td>Timestamp</td>
+            <td><em>timestamp</em></td>
             <td>Yes</td>
             <td>See description above.</td>
             <td>See description above.</td>
             <td><code>t</code></td>
         </tr>
         <tr>
-            <td>App ID</td>
+            <td><em>appID</em></td>
             <td>Yes</td>
             <td>See description above.</td>
             <td>See description above.</td>
             <td><code>a</code></td>
         </tr>
         <tr>
-            <td>User ID</td>
+            <td><em>userId</em></td>
             <td>Yes</td>
             <td>See description above.</td>
             <td>See description above.</td>
             <td><code>u</code></td>
         </tr>
         <tr>
-            <td>Transaction Id</td>
+            <td><em>transactionId</em></td>
             <td>Yes</td>
             <td>64-bit signed integer</td>
             <td>
-                Unique identifier for this transaction. The tuple (User Id, Transaction Id, Item Id) should be unique. However it may be duplicated if a transaction is between two users (such as a sale or gift)
+                Unique identifier for this transaction. The tuple (<em>userId</em>, <em>transactionId</em>, <em>itemId</em>) should be unique. However it may be duplicated if a transaction is between two users (such as a sale or gift)
             </td>
             <td><code>r</code></td>
         </tr>
         <tr>
-            <td>Item Id</td>
+            <td><em>itemId</em></td>
             <td>Optional</td>
-            <td>String, 64 char max, ASCII  </td>
+            <td>String, 64 char max, ASCII</td>
             <td>
                 Application-assigned unique identifier for the item involved in this transaction. If the Type parameter is CurrencyConvert or the transaction involves only currency (e.g., an initial allocation of credits), this parameter may be omitted. Applications may, however, use the itemId parameter to track different types or buckets of currency conversions.
             </td>
             <td><code>i</code></td>
         </tr>
         <tr>
-            <td>Quantity</td>
+            <td><em>quantity</em></td>
             <td>Optional</td>
             <td>64-bit double</td>
             <td>The number of items (referenced by the itemId parameter) involved in this transaction. If the Type parameter is CurrencyConvert or the transaction involves only currency, this parameter may be omitted.</td>
             <td><code>tq</code></td>
         </tr>
         <tr>
-            <td>Type</td>
+            <td><em>type</em></td>
             <td>Yes</td>
             <td>String</td>
             <td>
                 The type of transaction. Must be one of the following: 
                 <ul>
                     <li>BuyItem: A purchase of virtual item.  The quantity is added to the user's inventory</li>
-                    <li>SellItem: A sale of a virtual item to another user. The item is removed from the user's inventory. Note: a sale of an item will result in two events with the same transactionId, one for the sale with type SellItem, and one for the receipt of that sale, with type BuyItem</li>
-                    <li>ReturnItem: A return of a virtual item to the store. The item is removed from the user's inventory</li>
+                    <li>
+                        SellItem: A sale of a virtual item to another user. The item is removed from the user's inventory. Note: a sale of an item will result in two events with the same transactionId, one for the sale with type SellItem, and one for the receipt of that sale, with type BuyItem
+                    </li>
+                    <li>
+                        ReturnItem: A return of a virtual item to the store. The item is removed from the user's inventory
+                    </li>
                     <li>BuyService: A purchase of a service, e.g., VIP membership </li>
                     <li>SellService: The sale of a service to another user</li>
                     <li>ReturnService:  The return of a service</li>
-                    <li>CurrencyConvert: An conversion of currency from one form to another, usually in the form of real currency (e.g., US dollars) to virtual currency.  If the type of a transaction is CurrencyConvert, then there should be at least 2 currencyTypeN parameters</li>
+                    <li>
+                        CurrencyConvert: An conversion of currency from one form to another, usually in the form of real currency (e.g., US dollars) to virtual currency.  If the type of a transaction is CurrencyConvert, then there should be at least 2 currencyTypeN parameters
+                    </li>
                     <li>Initial: An initial allocation of currency and/or virtual items to a new user</li>
                     <li>Free: Free currency or item given to a user by the application</li>
-                    <li>Reward: Currency or virtual item given by the application as a reward for some action by the user</li>
-                    <li>GiftSend: A virtual item sent from one user to another. Note: a virtual gift should result in two transaction events with the same transactionId, one with the type GiftSend, and another with the type GiftReceive</li>
+                    <li>
+                        Reward: Currency or virtual item given by the application as a reward for some action by the user
+                    </li>
+                    <li>
+                        GiftSend: A virtual item sent from one user to another. Note: a virtual gift should result in two transaction events with the same transactionId, one with the type GiftSend, and another with the type GiftReceive
+                    </li>
                     <li>GiftReceive: A virtual good received by a user. See note for GiftSend type</li>
                 </ul>
             </td>
             <td><code>tt</code></td>
         </tr>
         <tr>
-            <td>Currency Type {N}(0 <= N <= 9)</td>   
+            <td><em>currencyTypeN</em> (0 &lt;= N &lt;= 9)</td>   
             <td>Yes</td>
             <td>String, 16 char max, ASCII.</td>     
             <td>
-                A currency type involved in this transaction. One Currency Type {N} parameter is required, but there may be up to 10 Currency Type {N} parameters in a transaction event. If the Currency Category {N} parameter is r then the currency type must be one of the following:
+                A currency type involved in this transaction. One <em>currencyTypeN</em> parameter is required, but there may be up to 10 Currency Type {N} parameters in a transaction event. If the <em>currencyCategoryN</em>parameter is r then the currency type must be one of the following:
                 <ul>
                     <li>USD for US dollars</li>
                     <li>FBC for Facebook Credits</li>
@@ -438,21 +443,20 @@ or an in-game *virtual* currency.
             </td>
             <code>tc{N}</code>
         </tr>
-        <tr>
-            <td>Currency Value {N} (0 <= N <= 9)   
-            <td>Yes 
-            <td>64-bit double   
+            <td><em>currencyTypeN</em> (0 &lt;= N &lt;= 9)</td>   
+            <td>Yes</td>
+            <td>64-bit double</td>
             <td>
-                The amount of Currency Type {N} involved in this transaction. At least, one Currency Value {N} parameter is required. The value of the Currency Value {N}  parameter should be positive in all cases except for when the type of the transaction is CurrencyConvert; in that case, the value for the currency the user is spending should be negative.
+                The amount of <em>currencyTypeN</em> involved in this transaction. At least, one currencyValueN parameter is required. The value of the <em>currencyValueN</em>  parameter should be positive in all cases except for when the type of the transaction is CurrencyConvert; in that case, the value for the currency the user is spending should be negative.
             </td>
             <td><code>tvN</code></td>
         </tr>
         <tr>
-            <td>Currency Category {N} (0 <= N <= 9)</td>
+            <td><em>currencyCategoryN</em> (0 &lt;= N &lt;= 9)</td>
             <td>Yes</td>
             <td>String, one character</td>
             <td>
-                The category of currency involved in this transaction. At least one Currency Category {N} parameter is required. Must be one of the following:
+                The category of currency involved in this transaction. At least one <em>currencyCategoryN</em>  parameter is required. Must be one of the following:
                 <ul>
                     <li> r: real currency (e.g., US dollars or Facebook Credits)</lI>
                     <li> v: virtual currency</li>
@@ -461,18 +465,16 @@ or an in-game *virtual* currency.
             <td><code>taN</code></td>
         </tr>
         <tr>
-            <td>Other User Id</td>    
-            <td>Optional</td>    
-            <td>String, 64 char max, UTF-8</td>  
+            <td><em>otherUserId</em></td>
+            <td>Optional</td>
+            <td>String, 64 char max, UTF-8</td>
             <td>
-                The UserId of another user involved in this transaction.  E.g., the recipient of a gift, or the buyer of a sold item
+                The <em>userId</em> of another user involved in this transaction.  E.g., the recipient of a gift, or the buyer of a sold item
             </td>
             <td><code>to</code></td>
         </tr>
     </tbody>
 </table>
-
-
 
 We hightlight three common use-cases below.
 * [Purchases of In-Game Currency with Real Currency](#purchases-of-in-game-currency-with-real-currency)
@@ -481,15 +483,166 @@ We hightlight three common use-cases below.
 
 ### Purchases of In-Game Currency with Real Currency
 
+A very common monetization strategy is to incentivize players to purchase premium, in-game currency with real currency. PlayRM treats this like a currency exchange. This is one of the few cases where currency metadata: *currencyTypes*, *currencyValues*, *currencyCategories* are expressed in an array form. *itemId*, *quantity*, and *otherUserId* are not included.
+
+Example: player purchases 500 Gold Coins for 10 USD.
+
+Call with PHP REST Client:
+
+```php
+$args = array(
+    "user_id" => $player_id,
+    "transaction_id" => $transaction_id,
+    "currencies" => array(
+        0 => TransactionCurrency::createVirtual("Gold Coins", 500),
+        1 => TransactionCurrency::createReal("USD", -10)
+    ),
+    "type" => TransactionType::CurrencyConvert
+);
+
+$api_client->transaction($args);
+```
+
+Resulting HTTP GET:
+```
+http://api.a.playnomics.net/v1/transaction?
+    a=4104146557547035721&
+    r=36&
+    t=1367941381&
+    ta0=v&
+    ta1=r&
+    tc0=Gold+Coins&
+    tc1=USD&
+    tt=CurrencyConvert&
+    tv0=500&
+    tv1=-10&
+    u=1&
+    sig=e58c38ecc4cde6a6b7522621f689895dd7c8d7efacb4d311fb2db75fa64fee48
+```
 
 ### Purchases of Items with Real Currency
 
+Example: player purchases a "Sword" for $.99 USD.
+
+Call with PHP REST Client:
+
+```php
+$args = array(
+    "user_id" => $player_id,
+    "transaction_id" => $transaction_id,
+    "currencies" => array(
+        1 => TransactionCurrency::createReal("USD", .99)
+    ),
+    "type" => TransactionType::BuyItem,
+    "quantity" => 1,
+    "item_id" => "Sword"
+);
+
+$api_client->transaction($args);
+```
+
+Resulting HTTP GET:
+```
+http://api.a.playnomics.net/v1/transaction?
+    a=4104146557547035721&
+    i=Sword&
+    r=43&
+    t=1367941381&
+    ta0=r&
+    tc0=USD
+    &tq=1&
+    tt=BuyItem&
+    tv0=0.99&
+    u=1&
+    sig=5eb51bccc53480d852c2cffccf83e87e33997587e2d817a5dd86c26b772778c0
+```
 
 ### Purchases of Items with Premium Currency
 
+This event is used to segment monetized users (and potential future monetizers) by collecting information about how and when they spend their premium currency (an in-game currency that is primarily acquired using a *real* currency). This is one level of information deeper than the previous use-cases.
 
+#### Currency Exchanges
+
+This is a continuation on the first currency exchange example. It showcases how to track each purchase of in-game *attention* currency (non-premium virtual currency) paid for with a *premium*:
+
+Example: in this hypothetical, Energy is an attention currency that is earned over the lifetime of the game. They can also be purchased with the premium Gold Coins that the player may have purchased earlier. The player buys 100 Energy with 10 Gold Coins.
+
+Call with PHP REST Client:
+```php
+$args = array(
+    "user_id" => $player_id,
+    "transaction_id" => $transaction_id,
+    "currencies" => array(
+        0 => TransactionCurrency::createVirtual("Gold Coins", -10),
+        1 => TransactionCurrency::createVirtual("Energy", 100),
+    ),
+    "type" => TransactionType::CurrencyConvert,
+);
+
+$api_client->transaction($args);
+```
+
+Resulting HTTP GET:
+```
+http://api.a.playnomics.net/v1/transaction?
+    a=4104146557547035721&
+    r=83&
+    t=1367941381&
+    ta0=v&
+    ta1=v&
+    tc0=Gold+Coins&
+    tc1=Energy&
+    tt=CurrencyConvert&
+    tv0=-10&
+    tv1=100&
+    u=1&
+    sig=b214134241616786d1930555baf8c2606da39b8417cb8461102fef1633cf723f
+```
+
+#### Item Purchases
+
+This is a continuation on the first item purchase example, except with premium currency.
+
+Hypothetical: player buys 20 Light Armor with 5 Gold Coins.
+
+Call with PHP REST Client:
+```php
+$args = array(
+    "user_id" => $player_id,
+    "transaction_id" => $transaction_id,
+    "currencies" => array(
+        1 => TransactionCurrency::createVirtual("Gold Coins", 5)
+    ), 
+    "type" => TransactionType::BuyItem,
+    "quantity" => 20,
+    "item_id" => "Light Armor"
+);
+
+$api_client->transaction($args);
+```
+
+Resulting HTTP GET:
+```
+http://api.a.playnomics.net/v1/transaction?
+    a=4104146557547035721&
+    i=Light+Armor&
+    r=26&
+    t=1367941381&
+    ta0=v&
+    tc0=Gold+Coins&
+    tq=20&
+    tt=BuyItem&
+    tv0=5&
+    u=1&
+    sig=2ae9493eab0ca20683433048193f754d63bfbcf0c4dcbe1381ea9a3d6eb51e2a
+```
 
 ## Invitations and Virality
+
+The virality module allows you to track a singular invitation from one user to another (e.g., inviting friends to join a game on Facebook).
+
+API Path: `/v1/invitationSent`
+Query Parameters: 
 <table>
     <thead>
         <tr>
@@ -512,52 +665,261 @@ We hightlight three common use-cases below.
     </thead>
     <tbody>
         <tr>
-           <td>
-
-           </td>
-           <td>
-
-           </td>
-           <td>
-           </td>
-           <td>
-           </td>
+            <td><em>timestamp</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>t</code></td>
+        </tr>
+        <tr>
+            <td><em>appID</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>a</code></td>
+        </tr>
+        <tr>
+            <td><em>userId</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>u</code></td>
+        </tr>
+        <tr>
+            <td><em>invitationId</em></td>
+            <td>Yes</td>
+            <td>64-bit signed integer</td>
+            <td>Application-assigned unique identifier for this invitation</td>  
+            <td><code>ii</code></td>
+        </tr>
+        <tr>
+            <td><em>recipientUserId</em></td>
+            <td>Optional</td>
+            <td>String, 64 char max, UTF-8</td>
+            <td>
+                The application's <em>userId</em> for the recipient of the invitation. This id should be the same id as the recipient has or would have in the user catalog. If this id is not known at the time the invitation is sent, this parameter should be excluded.
+            </td>
+            <td><code>ir</code></td>
+        </tr>
+        <tr>
+            <td><em>recipientAddress</em></td>
+            <td>Optional</td>
+            <td>String, 256 char max, UTF-8</td>
+            <td>
+                The address, specific the method being used, to send the invitation to the recipient, such as email address. In the case of email addresses or other personally identifiable information it should be hashed or otherwise obscured.
+            </td>
+            <td><code>a</code></td>
+        </tr>
+        <tr>
+            <td><em>method</em></td>
+            <td>Optional</td>
+            <td>String, 16 char max, ASCII</td>
+            <td>The type of invitation - e.g., email, in-game message</td>
+            <td><code>im</code></td>
         </tr>
     </tbody>
 </table>
 
-## Custom Event Tracking
+Call with PHP REST Client:
+```php
+$args = array(
+    "user_id" => $player_id,
+    "invitation_id" => $invitation_id,
+    "recipient_address" => hash_hmac("sha256", "player2@gmail.com", "INVITATION_KEY"),
+    "method" => "email"
+);
 
+$api_client->invitationSent($args);
+```
+Resulting HTTP GET:
+```
+http://api.b.playnomics.net/v1/invitationSent?
+    a=4104146557547035721&
+    ia=89ceb2b1a02bc693dcf175c14a05b6becd71be9fe2f3a5b049b72633d7968a64&
+    ii=36&
+    im=email&
+    t=1367941382&
+    u=1&
+    sig=edb83492c37a84cc638de52b5f51b4767484ef917ab97ca2653672336f5af14b
+```
+
+You can then track each invitation response. The important thing to note is that you will need to persist the *invitationId* in invitation callback URL (e.g. the link that the player two clicks on should contain the original *invitationId*).
+
+API Path: `/v1/invitationResponse`
+Query Parameters: 
 <table>
     <thead>
         <tr>
             <th>
-                
+                Name
             </th>
             <th>
-
+                Required?
             </th>
             <th>
-
+                Type
             </th>
             <th>
-
+                Description
+            </th>
+            <th>
+                URL Parameter
             </th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>
-
-            </td>
-            <td>
-
-            </td>
-            <td>
-            </td>
-            <td>
-            </td>
+            <td><em>timestamp</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>t</code></td>
+        </tr>
+        <tr>
+            <td><em>appID</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>a</code></td>
+        </tr>
+        <tr>
+            <td><em>userId</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>u</code></td>
+        </tr>
+        <tr>
+            <td><em>invitationId</em></td>
+            <td>Yes</td>
+            <td>64-bit signed integer</td>
+            <td>Unique identifier for this invitation, corresponding to the <em>nvitationId</em> in the InvitationSent event</td>
+            <td><code>ii</code></td>
+        </tr>
+        <tr>
+            <td><em>recipientUserId</em></td>
+            <td>Yes</td>
+            <td>String, 64 char max, UTF-8</td>
+            <td>The userId of the recipient</td>
+            <td><code>ir</code></td>
+        </tr>
+        <tr>
+            <td><em>response</em></td>
+            <td>Yes</td>
+            <td>String</td>
+            <td>Must be "accepted".</td>
+            <td><code>ie</code></td>
         </tr>
     </tbody>
 </table>
-# Support Issuess
+
+Call with PHP REST Client:
+```php
+$args = array(
+    "user_id" => $player_two_id,
+    "recipient_user_id" => $player_two_id,
+    "invitation_id" => $invitation_id
+);
+$api_client->invitationResponse($args);
+```
+Resulting HTTP GET:
+```
+http://api.a.playnomics.net/v1/invitationResponse?
+    a=4104146557547035721&
+    ie=accepted&
+    ii=36&
+    ir=2&
+    t=1367941382&
+    u=2&
+    sig=50fe555c9db50d4f62dac60f4e48f119c0b5a3298c297e6f782c2fdbb6a16056
+```
+
+## Custom Event Tracking
+
+Milestones may be defined in a number of ways.  They may be defined at certain key gameplay points like finishing a tutorial, or may they refer to other important milestones in a user’s lifecycle. PlayRM, by default, supports up to five custom milestones.  Users can be segmented based on when and how many times they have achieved a particular milestone.
+
+API Path: `/v1/milestone`
+Query Parameters: 
+<table>
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Required?
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                URL Parameter
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><em>timestamp</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>t</code></td>
+        </tr>
+        <tr>
+            <td><em>appID</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>a</code></td>
+        </tr>
+        <tr>
+            <td><em>userId</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>u</code></td>
+        </tr>
+        <tr>
+            <td><em>milestoneId</em></td>
+            <td>Yes</td>
+            <td>64-bit signed integer</td>
+            <td>a unique 64-bit numeric identifier for this milestone occurrence</td>
+            <td><code>mi</code></td>  
+        </tr>
+        <tr>
+            <td><em>milestoneName</em></td>
+            <td>Yes</td>
+            <td>String, ASCII</td>
+            <td>The identifier for the milestone (case insensitive), must be TUTORIAL, or CUSTOM1 through CUSTOM5</td>
+            <td><code>mn</code></td>
+        </tr>
+    </tbody>
+</table>
+
+Call with PHP REST Client:
+```php
+$args = array(
+    "user_id" => $player_id,
+    "milestone_name" => "CUSTOM1",
+    "milestone_id" => rand(1, 1000000)
+);
+
+$api_client->milestone($args);
+```
+
+Resulting HTTP GET
+```
+http://api.a.playnomics.net/v1/milestone?
+    a=4104146557547035721&
+    mi=63&
+    mn=CUSTOM1&
+    t=1367945380&
+    u=1&
+    sig=d678291fe62b9dc08f701fe7178d368c3f357bd390bfae53bf4bd2d9bf52ca00
+```
+Support Issues
+==============
+If you have any questions or issues, please contact <a href="mailto:support@playnomics.com">support@playnomics.com</a>.

@@ -23,7 +23,7 @@ class PlaynomicsApiClient {
         $params["tq"] = $this->coaleseValue($args, "quantity");
         $params["to"] =  $this->coaleseValue($args, "other_user_id");
 
-        $index = 1;
+        $index = 0;
         foreach($args["currencies"] as $currency) {
             $params["tc".$index] = $currency->getName();
             $params["tv".$index] = $currency->getValue();
@@ -49,8 +49,6 @@ class PlaynomicsApiClient {
         $params = $this->getDefaultParams($args["user_id"]);
         $info_type = "update";
         $params["pt"] = $info_type;
-        $params["pc"] = $this->coaleseValue($args, "country");
-        $params["ps"] = $this->coaleseValue($args, "subdivision");
         $params["px"] = $this->coaleseValue($args, "sex");
         $params["pb"] = $this->coaleseValue($args, "birth_year");
         $params["po"] = $this->coaleseValue($args, "source");

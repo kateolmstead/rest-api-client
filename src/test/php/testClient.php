@@ -29,13 +29,14 @@ function main() {
         "user_id" => $player_one_id,
         "transaction_id" => $transaction_id,
         "currencies" => array(
-            0 => TransactionCurrency::createVirtual("coins", 50),
-            1 => TransactionCurrency::createReal("USD", -1)
+            0 => TransactionCurrency::createVirtual("Gold Coins", 500),
+            1 => TransactionCurrency::createReal("USD", -10)
         ), 
         "type" => TransactionType::CurrencyConvert
     );
 
-    echo "CurrencyConvert transaction with args : " . var_dump($args);
+    echo "CurrencyConvert transaction with args : ";
+    var_dump($args);
     $api_client->transaction($args);
     
     //player1 purchase a game item with real currency
@@ -44,30 +45,48 @@ function main() {
         "user_id" => $player_one_id,
         "transaction_id" => $transaction_id,
         "currencies" => array(
-            1 => TransactionCurrency::createReal("USD", 1)
+            0 => TransactionCurrency::createReal("USD", .99)
         ), 
         "type" => TransactionType::BuyItem,
         "quantity" => 1,
         "item_id" => "Sword"
     );
 
-    echo "BuyItem transaction with args : " . var_dump($args);
+    echo "BuyItem transaction with args : ";
+    var_dump($args);
     $api_client->transaction($args);
     
-    //player1 purchase a game item with virtual currency
+    //player1 purchases attention currency with premium currency 
     $transaction_id = rand(1, 100);
     $args = array(
         "user_id" => $player_one_id,
         "transaction_id" => $transaction_id,
         "currencies" => array(
-            1 => TransactionCurrency::createVirtual("coins", 10)
+            0 => TransactionCurrency::createVirtual("Gold Coins", -10),
+            1 => TransactionCurrency::createVirtual("Energy", 100),
         ), 
-        "type" => TransactionType::BuyItem,
-        "quantity" => 1,
-        "item_id" => "Sword"
+        "type" => TransactionType::CurrencyConvert,
     );
 
-    echo "BuyItem transaction with args : " . var_dump($args);
+    echo "CurrencyConvert transaction with args : ";
+    var_dump($args);
+    $api_client->transaction($args);
+
+    //player1 purchases a game item with premium currency
+    $transaction_id = rand(1, 100);
+    $args = array(
+        "user_id" => $player_one_id,
+        "transaction_id" => $transaction_id,
+        "currencies" => array(
+            1 => TransactionCurrency::createVirtual("Gold Coins", 5)
+        ), 
+        "type" => TransactionType::BuyItem,
+        "quantity" => 20,
+        "item_id" => "Light Armor"
+    );
+
+    echo "BuyItem transaction with args : ";
+    var_dump($args);
     $api_client->transaction($args);
     
     //player1 completes milestone CUSTOM1
@@ -77,7 +96,8 @@ function main() {
         "milestone_id" => rand(1, 100)
     );
 
-    echo "milestone with args : " . var_dump($args);
+    echo "milestone with args : ";
+    var_dump($args);
     $api_client->milestone($args);
 
     //player1 invites player2 to join the game
@@ -85,35 +105,30 @@ function main() {
     $args = array(
         "user_id" => $player_one_id,
         "invitation_id" => $invitation_id,
-        "recipient_address" => hash_hmac("sha256", $player_two_email, "INVITATION_KEY")
+        "recipient_address" => hash_hmac("sha256", $player_two_email, "INVITATION_KEY"),
+        "method" => "email"
     );
 
-    echo "invitationSent with args : " . var_dump($args);
+    echo "invitationSent with args : ";
+    var_dump($args);
     $api_client->invitationSent($args);
 
     //player two joins this game from the invitation that player_one sent
 
     $player_two_id = 2;
 
+    //report the demographic info that player2 fills out when she joins
     $args = array(
         "user_id" => $player_two_id,
-        "session_id" => $session_id,
-        "site" => "http://awesomegames.com"
-    );
-    echo "sessionStart with args : " . var_dump($args);
-    $api_client->sessionStart($args);
-
-    //report the demographic info that player2 fills out when he joins
-    $args = array(
-        "user_id" => $player_two_id,
-        "country" => "USA",
-        "subdivision" => "94131",
         "sex" => "F",
         "birth_year" => 1980,
         "source" => "invitation",
-        "source_user" => $player_one_id
+        "source_user" => $player_one_id,
+        "source_campaign" => "UserReferral",
+        "install_time" => time()
     );
-    echo "userInfo with args : " . var_dump($args);
+    echo "userInfo with args : ";
+    var_dump($args);
     $api_client->userInfo($args);
     
     //player2 accepts player1's invitations
@@ -122,9 +137,9 @@ function main() {
         "recipient_user_id" => $player_two_id,
         "invitation_id" => $invitation_id
     );
-
+    echo "invitationResponse with args : ";
+    var_dump($args);
     $api_client->invitationResponse($args);
-    echo "invitationResponse with args : " . var_dump($args);
 }
 main();
 ?>
