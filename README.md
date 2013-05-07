@@ -6,7 +6,7 @@ This guide showcases the features of the PlayRM RESTful API, provides a sample A
 PlayRM provides game developers with tools for tracking player behavior and engagement so that they can:
 
 * Better understand and segment their audience
-* Reach out to new like-minded players
+* Reach out to new, like-minded players
 * Retain their current audience
 * Ultimately generate more revenue for their games
 
@@ -16,12 +16,12 @@ Using the PlayRM RESTful API provides you with the flexibility to leverage PlayR
 
 The client SDKs do provide some additional functionality that is not available with a pure server-side integration:
 * Segmented messaging
-* Engagement module which allows PlayRM to track and score player intensity, engagement
+* Engagement module which allows PlayRM to track and score player intensity
 * Geo location of the player, this is important for messaging localization and geographic segmentation.
 
-To utilize this functionality, you'll want to implement the appropriate client-side SDK in your game client (JavaScript, iOS, Unity, Android, etc).
+To utilize this functionality you'll want to implement the appropriate client-side SDK in your game client (JavaScript, iOS, Unity, Android, etc).
 
-These modules are still available by calling the RESTful API:
+These modules are available by calling the RESTful API:
 
 * [User Info Module](#demographics-and-install-attribution) - provides basic user information
 * [Monetization Module](#monetization) - tracks various monetization events
@@ -62,7 +62,7 @@ Server-Side Integration
 
 ## Common Parameters
 
-For every reqest to the API, we always required that you submit the following parameters:
+For every request sent to the API, we require you to submit the following parameters:
 
 <table>
     <thead>
@@ -96,9 +96,9 @@ For every reqest to the API, we always required that you submit the following pa
             <td><em>userId</em></td>
             <td>String, 64 char max, UTF-8</td>
             <td>
-                The <em>User ID</em> should be a persistent, anonymized, and unique to each player.
+                The <em>User ID</em> should be a persistent, anonymized, and unique identifier to each player.
                 
-                You can also use third-party authorization tool like Facebook or Twitter. However, <strong>you cannot use the user's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
+                You can also use a third-party authorization tool, e.g.: Facebook, or Twitter. However, <strong>you cannot use the user's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
             </td>
         </tr>
     </tbody>
@@ -106,7 +106,7 @@ For every reqest to the API, we always required that you submit the following pa
 
 ## Instantiating the PHP Client
 
-To use the PHP PlaynomicsApiClient, fork this repository or download the source files. Then import the PlaynomicsApiClient into your server-side code:
+To use the PHP PlaynomicsApiClient, fork this repository or download the source files. You can then import the PlaynomicsApiClient into your server-side code:
 
 ```php
 require_once "<PATH-TO-PLAYNOMICS-API-CLIENT>/PlaynomicsApiClient.php";
@@ -136,7 +136,7 @@ Process to sign a request:
 * Generate the canonical URL
     * Start with the URI path from the first "/" after the hostname
     * Remove any signature parameters (e.g., sig) if they exist
-    * Re­order the query parameters to be in case­insensitive alphabetical order
+    * Re­order the query parameters to be in case-­insensitive, alphabetical order
 * Compute the signature using HMAC+SHA256 with your application's `API Key` and the canonical url string from the previous step
 * Append the signature as a the `sig` parameter, but make sure that you URL encode the value
 
@@ -294,7 +294,7 @@ Query Parameters:
             <td><code>pm</code></td>
         </tr>
         <tr>
-            <td>sourceUser</em></td>
+            <td><em>sourceUser</em></td>
             <td>Optional</td>
             <td>See User Id Common Parameter </td>
             <td>
@@ -303,7 +303,7 @@ Query Parameters:
             <td><code>pu</code></td>
         </tr>
         <tr>
-            <td>installTime</em></td>
+            <td><em>installTime</em></td>
             <td>Optional</td>
             <td>
                 32-bit signed integer, 64-bit signed integer, 64-bit double, or String
@@ -408,7 +408,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 64 char max, ASCII</td>
             <td>
-                Application-assigned unique identifier for the item involved in this transaction. If the Type parameter is CurrencyConvert or the transaction involves only currency (e.g., an initial allocation of credits), this parameter may be omitted. Applications may, however, use the itemId parameter to track different types or buckets of currency conversions.
+                Application-assigned unique identifier for the item involved in this transaction. If the <em>type</em> parameter is CurrencyConvert or the transaction involves only currency (e.g., an initial allocation of credits), this parameter may be omitted. Applications may, however, use the itemId parameter to track different types or buckets of currency conversions.
             </td>
             <td><code>i</code></td>
         </tr>
@@ -494,7 +494,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 64 char max, UTF-8</td>
             <td>
-                The <em>userId</em> of another user involved in this transaction.  E.g., the recipient of a gift, or the buyer of a sold item
+                The <em>userId</em> of another user involved in this transaction, e.g. the recipient of a gift, or the buyer of a sold item
             </td>
             <td><code>to</code></td>
         </tr>
