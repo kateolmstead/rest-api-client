@@ -33,8 +33,9 @@ Core Concepts
 * [Prerequisites](#prerequisites)
     * [Signing Up for the PlayRM Service](#signing-up-for-the-playrm-service)
     * [Register Your Game](#register-your-game)
-# [Server-Side Integration](#server-side-integration)    
+* [Server-Side Integration](#server-side-integration)    
     * [Common Parameters](#common-parameters)
+    * [Instantiating the PHP Client](#instantiating-the-php-client)
     * [Signing Requests](#signing-requests)
     * [Demographics and Install Attribution](#demographics-and-install-attribution)
     * [Monetization](#monetization)
@@ -102,6 +103,30 @@ For every reqest to the API, we always required that you submit the following pa
         </tr>
     </tbody>
 </table>
+
+## Instantiating the PHP Client
+
+To use the PHP PlaynomicsApiClient, fork this repository or download the source files. Then import the PlaynomicsApiClient into your server-side code:
+
+```php
+require_once "<PATH-TO-PLAYNOMICS-API-CLIENT>/PlaynomicsApiClient.php";
+
+//...
+//...
+//...
+
+//optionally set a proxy to send requests through
+$proxy = "localhost:8888";
+
+$api_client = new PlaynomicsApiClient($app_id, $api_key, $proxy);
+
+//when testing, you can point the client to our testing API so that events won't get logged in the control panel
+//dashboard
+
+$api_client->test_mode = true;
+```
+
+The `$proxy` variable is entirely optional. You should make sure that `$api_client->test_mode` is set to `false` when you are ready to deploy your code to production.
 
 ## Signing Requests
 

@@ -19,7 +19,7 @@ function main() {
     //set up the proxy to send requests through Charles Proxy
     $proxy = "localhost:8888";
     $api_client = new PlaynomicsApiClient($app_id, $api_key, $proxy);
-
+    //don't log these events to your control panel dashboard
     $api_client->test_mode = true;
 
     //player1 purchase in game currency
@@ -93,7 +93,7 @@ function main() {
     $args = array(
         "user_id" => $player_one_id,
         "milestone_name" => "CUSTOM1",
-        "milestone_id" => rand(1, 100)
+        "milestone_id" => rand(1, 1000000)
     );
 
     echo "milestone with args : ";
