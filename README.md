@@ -501,7 +501,7 @@ Query Parameters:
     </tbody>
 </table>
 
-We hightlight three common use-cases below.
+We high light three common use-cases below.
 * [Purchases of In-Game Currency with Real Currency](#purchases-of-in-game-currency-with-real-currency)
 * [Purchases of Items with Real Currency](#purchases-of-items-with-real-currency)
 * [Purchases of Items with In-Game Currency](#purchases-of-items-with-in-game-currency)
