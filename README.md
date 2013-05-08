@@ -12,7 +12,7 @@ PlayRM provides game developers with tools for tracking player behavior and enga
 
 <img src="http://www.playnomics.com/wp-content/uploads/2013/03/header-flow-chart-02.png"/>
 
-Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM accross multiple games in conjunction with existing systems eg: payments, registration. If you already have an existing game server, this may simplify your integration with PlayRM.
+Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM across multiple games in conjunction with existing systems, such as payments and registration. If you already have an existing game server, this may simplify your integration with PlayRM.
 
 The client SDKs do provide some additional functionality that is not available with a pure server-side integration:
 * Segmented messaging
@@ -48,7 +48,7 @@ Core Concepts
 
 Prerequisites
 =============
-Before you can integrate with the PlayRM SDK you'll need to sign up and register your game.
+Before you can integrate with the PlayRM SDK, you'll need to sign up and register your game.
 
 ## Signing Up for the PlayRM Service
 
