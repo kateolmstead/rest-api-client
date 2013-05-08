@@ -84,7 +84,7 @@ For every request sent to the API, we require you to submit the following parame
                     <li>Unix epoch time in milliseconds since Jan 1, 1970, i.e., <em>ssssssssssmmm</em></li>
                 </ul>
 
-                Values > 2147483647 or < -2147483648 are assumed to be epoch time in milliseconds and may not contain a decimal component.  To indicate times prior to Jan 1, 1970, use a negative timestamp.
+                Values &gt; 2147483647 or &lt; -2147483648 are assumed to be epoch time in milliseconds and may not contain a decimal component. To indicate times prior to Jan 1, 1970, use a negative timestamp.
             </td>
         </tr>
         <tr>
@@ -98,7 +98,7 @@ For every request sent to the API, we require you to submit the following parame
             <td>
                 The <em>User ID</em> should be a persistent, anonymized, and unique identifier to each player.
                 
-                You can also use a third-party authorization tool, e.g.: Facebook, or Twitter. However, <strong>you cannot use the user's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
+                You can also use third-party authorization providers like Facebook or Twitter. However, <strong>you cannot use the user's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
             </td>
         </tr>
     </tbody>
