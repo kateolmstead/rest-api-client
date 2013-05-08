@@ -10,7 +10,7 @@ PlayRM provides game developers with tools for tracking player behavior and enga
 * Retain their current audience
 * Ultimately generate more revenue for their games
 
-<img src="http://www.playnomics.com/wp-content/uploads/2013/03/header-flow-chart-02.png"/>
+<img src="http://www.playnomics.com/assets/img/60-Day-Plan.png"/>
 
 Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM across multiple games in conjunction with existing systems, such as payments and registration. If you already have an existing game server, this may simplify your integration with PlayRM.
 
