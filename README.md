@@ -23,7 +23,7 @@ To utilize this functionality you'll want to implement the appropriate client-si
 
 These modules are available by calling the RESTful API:
 
-* [User Info Module](#demographics-and-install-attribution) - provides basic user information
+* [UserInfo Module](#demographics-and-install-attribution) - provides basic user information
 * [Monetization Module](#monetization) - tracks various monetization events
 * [Viral Module](#invitations-and-virality) - tracks the social activities of users
 * [Milestone Module](#custom-event-tracking) - tracks pre-defined significant events in the game experience
@@ -193,9 +193,9 @@ private function sendRequest($path, $query_params) {
 
 ## Demographics and Install Attribution
 
-The user info module can be called to collect basic demographic and acquisition information. This data can be used to segment users based on how/where they were acquired, and enables improved targeting with basic demographics in addition to the behavioral data collected using other events.
+The userInfo module can be called to collect basic demographic and acquisition information. This data can be used to segment users based on how/where they were acquired, and enables improved targeting with basic demographics in addition to the behavioral data collected using other events.
 
-PlayRM collects all user info events for the same userId and coalesces the information in the events to build an information catalog for that user. In the case of a conflict (such as two events for the same userId with different country parameters), Playnomics uses the information from the event with the most recent timestamp parameter. Since users may have been created prior to instrumentation, it is suggested that you send a user info event at the start of each user's session (e.g., upon login) to update that user's catalog information and to increase coverage of players in the catalog.
+PlayRM collects all userInfo events for the same userId and coalesces the information in the events to build an information catalog for that user. In the case of a conflict (such as two events for the same userId with different country parameters), Playnomics uses the information from the event with the most recent timestamp parameter. Since users may have been created prior to instrumentation, it is suggested that you send a userInfo event at the start of each user's session (e.g., upon login) to update that user's catalog information and to increase coverage of players in the catalog.
 
 API Path: `/v1/userInfo`
 Query Parameters:
