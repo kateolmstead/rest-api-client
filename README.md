@@ -3,14 +3,14 @@ PlayRM RESTful API Documentation
 
 This guide showcases the features of the PlayRM RESTful API, provides a sample API client written in PHP, and documents what information can be sent via server-side requests.
 
-PlayRM provides game developers with tools for tracking player behavior and engagement so that they can:
+PlayRM provides game publishers with tools for tracking player behavior and engagement so that they can:
 
 * Better understand and segment their audience
 * Reach out to new, like-minded players
 * Retain their current audience
 * Ultimately generate more revenue for their games
 
-<img src="http://www.playnomics.com/assets/img/60-Day-Plan.png"/>
+<img src="http://www.playnomics.com/integration/img/60-Day-Plan.png"/>
 
 Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM across multiple games in conjunction with existing systems, such as payments and registration. If you already have an existing game server, this may simplify your integration with PlayRM.
 
@@ -426,7 +426,7 @@ Query Parameters:
             <td>
                 The type of transaction. Must be one of the following: 
                 <ul>
-                    <li>BuyItem: A purchase of virtual item.  The quantity is added to the user's inventory</li>
+                    <li>BuyItem: A purchase of virtual item. The quantity is added to the user's inventory</li>
                     <li>
                         SellItem: A sale of a virtual item to another user. The item is removed from the user's inventory. Note: a sale of an item will result in two events with the same transactionId, one for the sale with type SellItem, and one for the receipt of that sale, with type BuyItem
                     </li>
