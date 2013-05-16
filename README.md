@@ -946,7 +946,6 @@ http://api.a.playnomics.net/v1/milestone?
     sig=d678291fe62b9dc08f701fe7178d368c3f357bd390bfae53bf4bd2d9bf52ca00
 ```
 <div id="support-issues">
-Support Issues
-==============
-If you have any questions or issues, please contact <a href="mailto:support@playnomics.com">support@playnomics.com</a>.
+    <h1>Support Issues</h1>
+    If you have any questions or issues, please contact <a href="mailto:support@playnomics.com">support@playnomics.com</a>.
 </div>
