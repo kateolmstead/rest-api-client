@@ -28,8 +28,8 @@ These modules are available by calling the RESTful API:
 * [Viral Module](#invitations-and-virality) - tracks the social activities of users
 * [Milestone Module](#custom-event-tracking) - tracks pre-defined significant events in the game experience
 
-Core Concepts
-=============
+Outline
+=======
 * [Prerequisites](#prerequisites)
     * [Signing Up for the PlayRM Service](#signing-up-for-the-playrm-service)
     * [Register Your Game](#register-your-game)
@@ -945,6 +945,8 @@ http://api.a.playnomics.net/v1/milestone?
     u=1&
     sig=d678291fe62b9dc08f701fe7178d368c3f357bd390bfae53bf4bd2d9bf52ca00
 ```
+<div id="support-issues">
 Support Issues
 ==============
 If you have any questions or issues, please contact <a href="mailto:support@playnomics.com">support@playnomics.com</a>.
+</div>
