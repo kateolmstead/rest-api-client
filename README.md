@@ -918,7 +918,7 @@ Query Parameters:
             <td>String, ASCII</td>
             <td>
                 The identifier for the milestone (case insensitive), must be TUTORIAL, or CUSTOM1 through CUSTOM5. 
-                The milestoneName is case-sensitive.
+                The <em>milestoneName</em> is case-sensitive.
             </td>
             <td><code>mn</code></td>
         </tr>
