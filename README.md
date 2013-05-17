@@ -10,8 +10,6 @@ PlayRM provides game publishers with tools for tracking player behavior and enga
 * Retain their current audience
 * Ultimately generate more revenue for their games
 
-<img src="http://www.playnomics.com/integration/img/60-Day-Plan.png"/>
-
 Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM across multiple games in conjunction with existing systems, such as payments and registration. If you already have an existing game server, this may simplify your integration with PlayRM.
 
 The client SDKs do provide some additional functionality that is not available with a pure server-side integration:
@@ -98,7 +96,7 @@ For every request sent to the API, we require you to submit the following parame
             <td>
                 The <em>User ID</em> should be a persistent, anonymized, and unique identifier to each player.
                 
-                You can also use third-party authorization providers like Facebook or Twitter. However, <strong>you cannot use the user's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
+                You can also use third-party authorization providers like Facebook or Twitter. However, <strong>you cannot use the player's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
             </td>
         </tr>
     </tbody>
@@ -195,7 +193,7 @@ private function sendRequest($path, $query_params) {
 
 The userInfo module can be called to collect basic demographic and acquisition information. This data can be used to segment users based on how/where they were acquired, and enables improved targeting with basic demographics in addition to the behavioral data collected using other events.
 
-PlayRM collects all userInfo events for the same userId and coalesces the information in the events to build an information catalog for that user. In the case of a conflict (such as two events for the same userId with different country parameters), Playnomics uses the information from the event with the most recent timestamp parameter. Since users may have been created prior to instrumentation, it is suggested that you send a userInfo event at the start of each user's session (e.g., upon login) to update that user's catalog information and to increase coverage of players in the catalog.
+PlayRM collects all userInfo events for the same userId and coalesces the information in the events to build an information catalog for that player. In the case of a conflict (such as two events for the same userId with different country parameters), Playnomics uses the information from the event with the most recent timestamp parameter. Since players may have been created prior to instrumentation, it is suggested that you send a userInfo event at the start of each player's session (e.g., upon login) to update that player's catalog information and to increase coverage of players in the catalog.
 
 API Path: `/v1/userInfo`
 Query Parameters:
@@ -243,7 +241,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 1 character</td>
             <td>
-                The user's sex. Must be one of the following:
+                The player's sex. Must be one of the following:
                 <ul>
                     <li>M: male</li>
                     <li>F: female</li>
@@ -259,7 +257,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 10 char max</td>
             <td>
-                The user's <em>birthYear</em> (and optionally month).  Must be one of the following formats: 
+                The player's <em>birthYear</em> (and optionally month).  Must be one of the following formats: 
                 <ul>
                     <li>YYYY/MM</li>
                     <li>YYYY-MM</li>
@@ -275,7 +273,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 16 char max, ASCII</td>
             <td>
-                Referring source for this user. May be application-defined, however the following standard case-insensitive names are highly suggested:
+                Referring source for this player. May be application-defined, however the following standard case-insensitive names are highly suggested:
                 <ul>
                     <li>Paid advertising: Adwords, DoubleClick, YahooAds, MSNAds, AOLAds, Adbrite, FacebookAds</li>
                     <li>Search: GoogleSearch, YahooSearch, BingSearch, FacebookSearch</li>
@@ -309,7 +307,7 @@ Query Parameters:
                 32-bit signed integer, 64-bit signed integer, 64-bit double, or String
             </td>
             <td>
-                Time or date on which this user was first created in the application - could be the time the application was installed, the time at which Facebook permissions were granted, or an application-defined time. If not provided, assumed to be the timestamp of the earliest event for the User Id.
+                Time or date on which this player was first created in the application - could be the time the application was installed, the time at which Facebook permissions were granted, or an application-defined time. If not provided, assumed to be the timestamp of the earliest event for the User Id.
                 Same format as the timestamp parameter (for times).
             </td>
             <td><code>pi</code></td>
@@ -354,7 +352,7 @@ http://api.a.playnomics.net/v1/userInfo?
 
 PlayRM provides a flexible interface for tracking monetization events. This module should be called every time a player triggers a monetization event. 
 
-This event tracks users that have monetized and the amount they have spent in total, real currency:
+This event tracks players that have monetized and the amount they have spent in total, real currency:
 * FBC (Facebook Credits)
 * USD (US Dollars)
 * OFD (offer valued in USD)
@@ -399,7 +397,7 @@ Query Parameters:
             <td>Yes</td>
             <td>64-bit signed integer</td>
             <td>
-                Unique identifier for this transaction. The tuple (<em>userId</em>, <em>transactionId</em>, <em>itemId</em>) should be unique. However it may be duplicated if a transaction is between two users (such as a sale or gift)
+                Unique identifier for this transaction. The tuple (<em>userId</em>, <em>transactionId</em>, <em>itemId</em>) should be unique. However it may be duplicated if a transaction is between two players (such as a sale or gift)
             </td>
             <td><code>r</code></td>
         </tr>
@@ -426,28 +424,28 @@ Query Parameters:
             <td>
                 The type of transaction. Must be one of the following: 
                 <ul>
-                    <li>BuyItem: A purchase of virtual item. The quantity is added to the user's inventory</li>
+                    <li>BuyItem: A purchase of virtual item. The quantity is added to the player's inventory</li>
                     <li>
-                        SellItem: A sale of a virtual item to another user. The item is removed from the user's inventory. Note: a sale of an item will result in two events with the same transactionId, one for the sale with type SellItem, and one for the receipt of that sale, with type BuyItem
+                        SellItem: A sale of a virtual item to another player. The item is removed from the player's inventory. Note: a sale of an item will result in two events with the same transactionId, one for the sale with type SellItem, and one for the receipt of that sale, with type BuyItem
                     </li>
                     <li>
-                        ReturnItem: A return of a virtual item to the store. The item is removed from the user's inventory
+                        ReturnItem: A return of a virtual item to the store. The item is removed from the player's inventory
                     </li>
                     <li>BuyService: A purchase of a service, e.g., VIP membership </li>
-                    <li>SellService: The sale of a service to another user</li>
+                    <li>SellService: The sale of a service to another player</li>
                     <li>ReturnService:  The return of a service</li>
                     <li>
                         CurrencyConvert: An conversion of currency from one form to another, usually in the form of real currency (e.g., US dollars) to virtual currency.  If the type of a transaction is CurrencyConvert, then there should be at least 2 currencyTypeN parameters
                     </li>
-                    <li>Initial: An initial allocation of currency and/or virtual items to a new user</li>
-                    <li>Free: Free currency or item given to a user by the application</li>
+                    <li>Initial: An initial allocation of currency and/or virtual items to a new player</li>
+                    <li>Free: Free currency or item given to a player by the application</li>
                     <li>
-                        Reward: Currency or virtual item given by the application as a reward for some action by the user
+                        Reward: Currency or virtual item given by the application as a reward for some action by the player
                     </li>
                     <li>
-                        GiftSend: A virtual item sent from one user to another. Note: a virtual gift should result in two transaction events with the same transactionId, one with the type GiftSend, and another with the type GiftReceive
+                        GiftSend: A virtual item sent from one player to another. Note: a virtual gift should result in two transaction events with the same transactionId, one with the type GiftSend, and another with the type GiftReceive
                     </li>
-                    <li>GiftReceive: A virtual good received by a user. See note for GiftSend type</li>
+                    <li>GiftReceive: A virtual good received by a player. See note for GiftSend type</li>
                 </ul>
             </td>
             <td><code>tt</code></td>
@@ -472,7 +470,7 @@ Query Parameters:
             <td>Yes</td>
             <td>64-bit double</td>
             <td>
-                The amount of <em>currencyTypeN</em> involved in this transaction. At least, one currencyValueN parameter is required. The value of the <em>currencyValueN</em>  parameter should be positive in all cases except for when the type of the transaction is CurrencyConvert; in that case, the value for the currency the user is spending should be negative.
+                The amount of <em>currencyTypeN</em> involved in this transaction. At least, one currencyValueN parameter is required. The value of the <em>currencyValueN</em>  parameter should be positive in all cases except for when the type of the transaction is CurrencyConvert; in that case, the value for the currency the player is spending should be negative.
             </td>
             <td><code>tvN</code></td>
         </tr>
@@ -494,7 +492,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 64 char max, UTF-8</td>
             <td>
-                The <em>userId</em> of another user involved in this transaction, e.g. the recipient of a gift, or the buyer of a sold item
+                The <em>userId</em> of another player involved in this transaction, e.g. the recipient of a gift, or the buyer of a sold item
             </td>
             <td><code>to</code></td>
         </tr>
@@ -584,7 +582,7 @@ http://api.a.playnomics.net/v1/transaction?
 
 ### Purchases of Items with Premium Currency
 
-This event is used to segment monetized users (and potential future monetizers) by collecting information about how and when they spend their premium currency (an in-game currency that is primarily acquired using a *real* currency). This is one level of information deeper than the previous use-cases.
+This event is used to segment monetized players (and potential future monetizers) by collecting information about how and when they spend their premium currency (an in-game currency that is primarily acquired using a *real* currency). This is one level of information deeper than the previous use-cases.
 
 #### Currency Exchanges
 
@@ -664,7 +662,7 @@ http://api.a.playnomics.net/v1/transaction?
 
 ## Invitations and Virality
 
-The virality module allows you to track a singular invitation from one user to another (e.g., inviting friends to join a game on Facebook).
+The virality module allows you to track a singular invitation from one player to another (e.g., inviting friends to join a game on Facebook).
 
 API Path: `/v1/invitationSent`
 Query Parameters: 
@@ -722,7 +720,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 64 char max, UTF-8</td>
             <td>
-                The application's <em>userId</em> for the recipient of the invitation. This id should be the same id as the recipient has or would have in the user catalog. If this id is not known at the time the invitation is sent, this parameter should be excluded.
+                The application's <em>userId</em> for the recipient of the invitation. This id should be the same id as the recipient has or would have in the player catalog. If this id is not known at the time the invitation is sent, this parameter should be excluded.
             </td>
             <td><code>ir</code></td>
         </tr>
@@ -861,7 +859,7 @@ http://api.a.playnomics.net/v1/invitationResponse?
 
 ## Custom Event Tracking
 
-Milestones may be defined in a number of ways.  They may be defined at certain key gameplay points like finishing a tutorial, or may they refer to other important milestones in a user’s lifecycle. PlayRM, by default, supports up to five custom milestones.  Users can be segmented based on when and how many times they have achieved a particular milestone.
+Milestones may be defined in a number of ways.  They may be defined at certain key gameplay points like finishing a tutorial, or may they refer to other important milestones in a player's lifecycle. PlayRM, by default, supports up to five custom milestones.  Players can be segmented based on when and how many times they have achieved a particular milestone.
 
 API Path: `/v1/milestone`
 Query Parameters: 
@@ -918,7 +916,10 @@ Query Parameters:
             <td><em>milestoneName</em></td>
             <td>Yes</td>
             <td>String, ASCII</td>
-            <td>The identifier for the milestone (case insensitive), must be TUTORIAL, or CUSTOM1 through CUSTOM5</td>
+            <td>
+                The identifier for the milestone (case insensitive), must be TUTORIAL, or CUSTOM1 through CUSTOM5. 
+                The milestoneName is case-sensitive.
+            </td>
             <td><code>mn</code></td>
         </tr>
     </tbody>
