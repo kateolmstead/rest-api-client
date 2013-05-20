@@ -1,6 +1,8 @@
 PlayRM RESTful API Documentation
 ================================
 
+If you're new to PlayRM or don't yet have an account with <a href="http://www.playnomics.com">Playnomics</a>, please take a moment to <a href="http://integration.playnomics.com/technical/#integration-getting-started">get acquainted with PlayRM</a>.
+
 This guide showcases the features of the PlayRM RESTful API, provides a sample API client written in PHP, and documents what information can be sent via server-side requests.
 
 PlayRM provides game publishers with tools for tracking player behavior and engagement so that they can:
@@ -28,9 +30,6 @@ These modules are available by calling the RESTful API:
 
 Outline
 =======
-* [Prerequisites](#prerequisites)
-    * [Signing Up for the PlayRM Service](#signing-up-for-the-playrm-service)
-    * [Register Your Game](#register-your-game)
 * [Server-Side Integration](#server-side-integration)    
     * [Common Parameters](#common-parameters)
     * [Instantiating the PHP Client](#instantiating-the-php-client)
@@ -43,17 +42,6 @@ Outline
     * [Invitations and Virality](#invitations-and-virality)
     * [Custom Event Tracking](#custom-event-tracking)
 * [Support Issues](#support-issues)
-
-Prerequisites
-=============
-Before you can integrate with the PlayRM SDK, you'll need to sign up and register your game.
-
-## Signing Up for the PlayRM Service
-
-Visit <a href="https://controlpanel.playnomics.com/signup" target="_blank">https://controlpanel.playnomics.com/signup</a> to create an account. The control panel is the dashboard to manage all of the PlayRM features once the SDK integration has been completed.
-
-## Register Your Game
-After receiving a registration confirmation email, login to the <a href="https://controlpanel.playnomics.com" target="_blank">control panel</a>. Select the "Applications" tab and create a new application. Your application will be granted an `App ID` and an `API Key`.
 
 Server-Side Integration
 =======================
