@@ -5,28 +5,27 @@ If you're new to PlayRM or don't yet have an account with <a href="http://www.pl
 
 This guide showcases the features of the PlayRM RESTful API, provides a sample API client written in PHP, and documents what information can be sent via server-side requests.
 
-PlayRM provides game publishers with tools for tracking player behavior and engagement so that they can:
+PlayRM provides app publishers with tools for tracking user behavior and engagement so that they can:
 
 * Better understand and segment their audience
-* Reach out to new, like-minded players
+* Reach out to new, like-minded users
 * Retain their current audience
-* Ultimately generate more revenue for their games
+* Ultimately generate more revenue for their applications
 
-Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM across multiple games in conjunction with existing systems, such as payments and registration. If you already have an existing game server, this may simplify your integration with PlayRM.
+Using the PlayRM RESTful API provides you with the flexibility to leverage PlayRM across multiple apps in conjunction with existing systems, such as payments and registration. If you already have an existing application server, this may simplify your integration with PlayRM.
 
 The client SDKs do provide some additional functionality that is not available with a pure server-side integration:
 * Segmented messaging
-* Engagement module which allows PlayRM to track and score player intensity
-* Geo location of the player
+* Engagement module which allows PlayRM to track and score user intensity
+* Geo location of the user
 
-To access this functionality you'll want to implement the appropriate client-side SDK in your game client (JavaScript, iOS, Unity, Android, etc). The engagement module and the player geo location information are automatically once the SDK has been installed.
+To access this functionality you'll want to implement the appropriate client-side SDK in your app client (JavaScript, iOS, Unity, Android, etc). The engagement module and the user geo location information are automatically included once the SDK has been installed.
 
 These modules are available by calling the RESTful API:
  
 * [UserInfo Module](#demographics-and-install-attribution) - provides basic user information
 * [Monetization Module](#monetization) - tracks various monetization events
-* [Viral Module](#invitations-and-virality) - tracks the social activities of users
-* [Milestone Module](#custom-event-tracking) - tracks pre-defined significant events in the game experience
+* [Custom Module](#custom-event-tracking) - tracks pre-defined significant events in the app experience
 
 Outline
 =======
@@ -36,11 +35,10 @@ Outline
     * [Signing Requests](#signing-requests)
     * [Demographics and Install Attribution](#demographics-and-install-attribution)
     * [Monetization](#monetization)
-        * [Purchases of In-Game Currency with Real Currency](#purchases-of-in-game-currency-with-real-currency)
+        * [Purchases of In-App Currency with Real Currency](#purchases-of-in-app-currency-with-real-currency)
         * [Purchases of Items with Real Currency](#purchases-of-items-with-real-currency)
         * [Purchases of Items with Premium Currency](#purchases-of-items-with-premium-currency)
-    * [Invitations and Virality](#invitations-and-virality)
-    * [Custom Event Tracking](#custom-event-tracking)
+* [Custom Event Tracking](#custom-event-tracking)
 * [Support Issues](#support-issues)
 
 Server-Side Integration
@@ -82,9 +80,9 @@ For every request sent to the API, we require you to submit the following parame
             <td><em>userId</em></td>
             <td>String, 64 char max, UTF-8</td>
             <td>
-                The <em>User ID</em> should be a persistent, anonymized, and unique identifier to each player.
+                The <em>User ID</em> should be a persistent, anonymized, and unique identifier to each user.
                 
-                You can also use third-party authorization providers like Facebook or Twitter. However, <strong>you cannot use the player's Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
+                You can also use third-party authorization providers like Facebook or Twitter. However, <strong>you cannot use the user’s Facebook ID or any personally identifiable information (plain-text email, name, etc) for the <em>User ID</em>.</strong>
             </td>
         </tr>
     </tbody>
@@ -123,7 +121,7 @@ Process to sign a request:
     * Start with the URI path from the first "/" after the hostname
     * Remove any signature parameters (e.g., sig) if they exist
     * Re­order the query parameters to be in case-­insensitive, alphabetical order
-* Compute the signature using HMAC+SHA256 with your application's `API Key` and the canonical url string from the previous step
+* Compute the signature using HMAC+SHA256 with your application's `API Key` and the canonical URL string from the previous step
 * Append the signature as a the `sig` parameter, but make sure that you URL encode the value
 
 `PlaynomicsApiClient` demonstrates how to do this:
@@ -181,7 +179,7 @@ private function sendRequest($path, $query_params) {
 
 The userInfo module can be called to collect basic demographic and acquisition information. This data can be used to segment users based on how/where they were acquired, and enables improved targeting with basic demographics in addition to the behavioral data collected using other events.
 
-PlayRM collects all userInfo events for the same userId and coalesces the information in the events to build an information catalog for that player. In the case of a conflict (such as two events for the same userId with different country parameters), Playnomics uses the information from the event with the most recent timestamp parameter. Since players may have been created prior to instrumentation, it is suggested that you send a userInfo event at the start of each player's session (e.g., upon login) to update that player's catalog information and to increase coverage of players in the catalog.
+PlayRM collects all userInfo events for the same userId and coalesces the information in the events to build an information catalog for that user. In the case of a conflict (such as two events for the same userId with different country parameters), Playnomics uses the information from the event with the most recent timestamp parameter. Since users may have been created prior to instrumentation, it is suggested that you send a userInfo event at the start of each user’s session (e.g., upon login) to update that user’s catalog information and to increase coverage of users in the catalog.
 
 API Path: `/v1/userInfo`
 Query Parameters:
@@ -229,7 +227,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 1 character</td>
             <td>
-                The player's sex. Must be one of the following:
+                The user’s sex. Must be one of the following:
                 <ul>
                     <li>M: male</li>
                     <li>F: female</li>
@@ -245,7 +243,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 10 char max</td>
             <td>
-                The player's <em>birthYear</em> (and optionally month).  Must be one of the following formats: 
+                The user’s <em>birthYear</em> (and optionally month).  Must be one of the following formats: 
                 <ul>
                     <li>YYYY/MM</li>
                     <li>YYYY-MM</li>
@@ -261,7 +259,7 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 16 char max, ASCII</td>
             <td>
-                Referring source for this player. May be application-defined, however the following standard case-insensitive names are highly suggested:
+                Referring source for this user. May be application-defined, however the following standard case-insensitive names are highly suggested:
                 <ul>
                     <li>Paid advertising: Adwords, DoubleClick, YahooAds, MSNAds, AOLAds, Adbrite, FacebookAds</li>
                     <li>Search: GoogleSearch, YahooSearch, BingSearch, FacebookSearch</li>
@@ -295,7 +293,7 @@ Query Parameters:
                 32-bit signed integer, 64-bit signed integer, 64-bit double, or String
             </td>
             <td>
-                Time or date on which this player was first created in the application - could be the time the application was installed, the time at which Facebook permissions were granted, or an application-defined time. If not provided, assumed to be the timestamp of the earliest event for the User Id.
+                Time or date on which this user was first created in the application - could be the time the application was installed, the time at which Facebook permissions were granted, or an application-defined time. If not provided, assumed to be the timestamp of the earliest event for the User Id.
                 Same format as the timestamp parameter (for times).
             </td>
             <td><code>pi</code></td>
@@ -306,7 +304,7 @@ Query Parameters:
 Call with PHP REST Client:
 
 ```php
-//report the demographic info that the player fills out when she joins
+//report the demographic info that the user fills out when she joins
 
 $args = array(
     "user_id" => $player_ID,
@@ -338,13 +336,13 @@ http://api.a.playnomics.net/v1/userInfo?
 
 ## Monetization
 
-PlayRM provides a flexible interface for tracking monetization events. This module should be called every time a player triggers a monetization event. 
+PlayRM provides a flexible interface for tracking monetization events. This module should be called every time a user triggers a monetization event. 
 
-This event tracks players that have monetized and the amount they have spent in total, real currency:
+This event tracks users that have monetized and the amount they have spent in total, real currency:
 * FBC (Facebook Credits)
 * USD (US Dollars)
 * OFD (offer valued in USD)
-or an in-game *virtual* currency.
+or an in-app *virtual* currency.
 
 API Path: `/v1/transaction`
 Query Parameters: 
@@ -385,7 +383,7 @@ Query Parameters:
             <td>Yes</td>
             <td>64-bit signed integer</td>
             <td>
-                Unique identifier for this transaction. The tuple (<em>userId</em>, <em>transactionId</em>, <em>itemId</em>) should be unique. However it may be duplicated if a transaction is between two players (such as a sale or gift)
+                Unique identifier for this transaction. The tuple (<em>userId</em>, <em>transactionId</em>, <em>itemId</em>) should be unique. However it may be duplicated if a transaction is between two users (such as a sale or gift)
             </td>
             <td><code>r</code></td>
         </tr>
@@ -412,28 +410,28 @@ Query Parameters:
             <td>
                 The type of transaction. Must be one of the following: 
                 <ul>
-                    <li>BuyItem: A purchase of virtual item. The quantity is added to the player's inventory</li>
+                    <li>BuyItem: A purchase of virtual item. The quantity is added to the user’s inventory</li>
                     <li>
-                        SellItem: A sale of a virtual item to another player. The item is removed from the player's inventory. Note: a sale of an item will result in two events with the same transactionId, one for the sale with type SellItem, and one for the receipt of that sale, with type BuyItem
+                        SellItem: A sale of a virtual item to another user. The item is removed from the user’s inventory. Note: a sale of an item will result in two events with the same transactionId, one for the sale with type SellItem, and one for the receipt of that sale, with type BuyItem
                     </li>
                     <li>
-                        ReturnItem: A return of a virtual item to the store. The item is removed from the player's inventory
+                        ReturnItem: A return of a virtual item to the store. The item is removed from the user’s inventory
                     </li>
                     <li>BuyService: A purchase of a service, e.g., VIP membership </li>
-                    <li>SellService: The sale of a service to another player</li>
+                    <li>SellService: The sale of a service to another user</li>
                     <li>ReturnService:  The return of a service</li>
                     <li>
                         CurrencyConvert: An conversion of currency from one form to another, usually in the form of real currency (e.g., US dollars) to virtual currency.  If the type of a transaction is CurrencyConvert, then there should be at least 2 currencyTypeN parameters
                     </li>
-                    <li>Initial: An initial allocation of currency and/or virtual items to a new player</li>
-                    <li>Free: Free currency or item given to a player by the application</li>
+                    <li>Initial: An initial allocation of currency and/or virtual items to a new user</li>
+                    <li>Free: Free currency or item given to a user by the application</li>
                     <li>
-                        Reward: Currency or virtual item given by the application as a reward for some action by the player
+                        Reward: Currency or virtual item given by the application as a reward for some action by the user
                     </li>
                     <li>
-                        GiftSend: A virtual item sent from one player to another. Note: a virtual gift should result in two transaction events with the same transactionId, one with the type GiftSend, and another with the type GiftReceive
+                        GiftSend: A virtual item sent from one user to another. Note: a virtual gift should result in two transaction events with the same transactionId, one with the type GiftSend, and another with the type GiftReceive
                     </li>
-                    <li>GiftReceive: A virtual good received by a player. See note for GiftSend type</li>
+                    <li>GiftReceive: A virtual good received by a user. See note for GiftSend type</li>
                 </ul>
             </td>
             <td><code>tt</code></td>
@@ -458,7 +456,7 @@ Query Parameters:
             <td>Yes</td>
             <td>64-bit double</td>
             <td>
-                The amount of <em>currencyTypeN</em> involved in this transaction. At least, one currencyValueN parameter is required. The value of the <em>currencyValueN</em>  parameter should be positive in all cases except for when the type of the transaction is CurrencyConvert; in that case, the value for the currency the player is spending should be negative.
+                The amount of <em>currencyTypeN</em> involved in this transaction. At least, one currencyValueN parameter is required. The value of the <em>currencyValueN</em>  parameter should be positive in all cases except for when the type of the transaction is CurrencyConvert; in that case, the value for the currency the user is spending should be negative.
             </td>
             <td><code>tvN</code></td>
         </tr>
@@ -480,23 +478,23 @@ Query Parameters:
             <td>Optional</td>
             <td>String, 64 char max, UTF-8</td>
             <td>
-                The <em>userId</em> of another player involved in this transaction, e.g. the recipient of a gift, or the buyer of a sold item
+                The <em>userId</em> of another user involved in this transaction, e.g. the recipient of a gift, or the buyer of a sold item
             </td>
             <td><code>to</code></td>
         </tr>
     </tbody>
 </table>
 
-We high light three common use-cases below.
-* [Purchases of In-Game Currency with Real Currency](#purchases-of-in-game-currency-with-real-currency)
+We highlight three common use-cases below.
+* [Purchases of In-App Currency with Real Currency](#purchases-of-in-app-currency-with-real-currency)
 * [Purchases of Items with Real Currency](#purchases-of-items-with-real-currency)
-* [Purchases of Items with In-Game Currency](#purchases-of-items-with-in-game-currency)
+* [Purchases of Items with In-App Currency](#purchases-of-items-with-in-app-currency)
 
-### Purchases of In-Game Currency with Real Currency
+### Purchases of In-App Currency with Real Currency
 
-A very common monetization strategy is to incentivize players to purchase premium, in-game currency with real currency. PlayRM treats this like a currency exchange. This is one of the few cases where currency metadata: *currencyTypes*, *currencyValues*, *currencyCategories* are expressed in an array form. *itemId*, *quantity*, and *otherUserId* are not included.
+A very common monetization strategy is to incentivize users to purchase premium, in-app currency with real currency. PlayRM treats this like a currency exchange. This is one of the few cases where currency metadata: *currencyTypes*, *currencyValues*, *currencyCategories* are expressed in an array form. *itemId*, *quantity*, and *otherUserId* are not included.
 
-Example: player purchases 500 Gold Coins for 10 USD.
+Example: user purchases 500 Gold Coins for 10 USD.
 
 Call with PHP REST Client:
 
@@ -533,7 +531,7 @@ http://api.a.playnomics.net/v1/transaction?
 
 ### Purchases of Items with Real Currency
 
-Example: player purchases a "Sword" for $.99 USD.
+Example: user purchases a "Sword" for $.99 USD.
 
 Call with PHP REST Client:
 
@@ -570,13 +568,13 @@ http://api.a.playnomics.net/v1/transaction?
 
 ### Purchases of Items with Premium Currency
 
-This event is used to segment monetized players (and potential future monetizers) by collecting information about how and when they spend their premium currency (an in-game currency that is primarily acquired using a *real* currency). This is one level of information deeper than the previous use-cases.
+This event is used to segment monetized users (and potential future monetizers) by collecting information about how and when they spend their premium currency (an in-app currency that is primarily acquired using a *real* currency). This is one level of information deeper than the previous use-cases.
 
 #### Currency Exchanges
 
-This is a continuation on the first currency exchange example. It showcases how to track each purchase of in-game *attention* currency (non-premium virtual currency) paid for with a *premium*:
+This is a continuation on the first currency exchange example. It showcases how to track each purchase of in-app *attention* currency (non-premium virtual currency) paid for with a *premium*:
 
-Example: in this hypothetical, Energy is an attention currency that is earned over the lifetime of the game. They can also be purchased with the premium Gold Coins that the player may have purchased earlier. The player buys 100 Energy with 10 Gold Coins.
+Example: in this hypothetical, Energy is an attention currency that is earned over the lifetime of the application. They can also be purchased with the premium Gold Coins that the user may have purchased earlier. The user buys 100 Energy with 10 Gold Coins.
 
 Call with PHP REST Client:
 ```php
@@ -614,7 +612,7 @@ http://api.a.playnomics.net/v1/transaction?
 
 This is a continuation on the first item purchase example, except with premium currency.
 
-Hypothetical: player buys 20 Light Armor with 5 Gold Coins.
+Hypothetical: user buys 20 Light Armor with 5 Gold Coins.
 
 Call with PHP REST Client:
 ```php
@@ -648,206 +646,11 @@ http://api.a.playnomics.net/v1/transaction?
     sig=2ae9493eab0ca20683433048193f754d63bfbcf0c4dcbe1381ea9a3d6eb51e2a
 ```
 
-## Invitations and Virality
-
-The virality module allows you to track a singular invitation from one player to another (e.g., inviting friends to join a game on Facebook).
-
-API Path: `/v1/invitationSent`
-Query Parameters: 
-<table>
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Required?
-            </th>
-            <th>
-                Type
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                URL Parameter
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><em>timestamp</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>t</code></td>
-        </tr>
-        <tr>
-            <td><em>appID</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>a</code></td>
-        </tr>
-        <tr>
-            <td><em>userId</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>u</code></td>
-        </tr>
-        <tr>
-            <td><em>invitationId</em></td>
-            <td>Yes</td>
-            <td>64-bit signed integer</td>
-            <td>Application-assigned unique identifier for this invitation</td>  
-            <td><code>ii</code></td>
-        </tr>
-        <tr>
-            <td><em>recipientUserId</em></td>
-            <td>Optional</td>
-            <td>String, 64 char max, UTF-8</td>
-            <td>
-                The application's <em>userId</em> for the recipient of the invitation. This id should be the same id as the recipient has or would have in the player catalog. If this id is not known at the time the invitation is sent, this parameter should be excluded.
-            </td>
-            <td><code>ir</code></td>
-        </tr>
-        <tr>
-            <td><em>recipientAddress</em></td>
-            <td>Optional</td>
-            <td>String, 256 char max, UTF-8</td>
-            <td>
-                The address, specific the method being used, to send the invitation to the recipient, such as email address. In the case of email addresses or other personally identifiable information it should be hashed or otherwise obscured.
-            </td>
-            <td><code>a</code></td>
-        </tr>
-        <tr>
-            <td><em>method</em></td>
-            <td>Optional</td>
-            <td>String, 16 char max, ASCII</td>
-            <td>The type of invitation - e.g., email, in-game message</td>
-            <td><code>im</code></td>
-        </tr>
-    </tbody>
-</table>
-
-Call with PHP REST Client:
-```php
-$args = array(
-    "user_id" => $player_id,
-    "invitation_id" => $invitation_id,
-    "recipient_address" => hash_hmac("sha256", "player2@gmail.com", "INVITATION_KEY"),
-    "method" => "email"
-);
-
-$api_client->invitationSent($args);
-```
-Resulting HTTP GET:
-```
-http://api.b.playnomics.net/v1/invitationSent?
-    a=4104146557547035721&
-    ia=89ceb2b1a02bc693dcf175c14a05b6becd71be9fe2f3a5b049b72633d7968a64&
-    ii=36&
-    im=email&
-    t=1367941382&
-    u=1&
-    sig=edb83492c37a84cc638de52b5f51b4767484ef917ab97ca2653672336f5af14b
-```
-
-You can then track each invitation response. The important thing to note is that you will need to persist the *invitationId* in invitation callback URL (e.g. the link that the player two clicks on should contain the original *invitationId*).
-
-API Path: `/v1/invitationResponse`
-Query Parameters: 
-<table>
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Required?
-            </th>
-            <th>
-                Type
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                URL Parameter
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><em>timestamp</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>t</code></td>
-        </tr>
-        <tr>
-            <td><em>appID</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>a</code></td>
-        </tr>
-        <tr>
-            <td><em>userId</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>u</code></td>
-        </tr>
-        <tr>
-            <td><em>invitationId</em></td>
-            <td>Yes</td>
-            <td>64-bit signed integer</td>
-            <td>Unique identifier for this invitation, corresponding to the <em>nvitationId</em> in the InvitationSent event</td>
-            <td><code>ii</code></td>
-        </tr>
-        <tr>
-            <td><em>recipientUserId</em></td>
-            <td>Yes</td>
-            <td>String, 64 char max, UTF-8</td>
-            <td>The userId of the recipient</td>
-            <td><code>ir</code></td>
-        </tr>
-        <tr>
-            <td><em>response</em></td>
-            <td>Yes</td>
-            <td>String</td>
-            <td>Must be "accepted".</td>
-            <td><code>ie</code></td>
-        </tr>
-    </tbody>
-</table>
-
-Call with PHP REST Client:
-```php
-$args = array(
-    "user_id" => $player_two_id,
-    "recipient_user_id" => $player_two_id,
-    "invitation_id" => $invitation_id
-);
-$api_client->invitationResponse($args);
-```
-Resulting HTTP GET:
-```
-http://api.a.playnomics.net/v1/invitationResponse?
-    a=4104146557547035721&
-    ie=accepted&
-    ii=36&
-    ir=2&
-    t=1367941382&
-    u=2&
-    sig=50fe555c9db50d4f62dac60f4e48f119c0b5a3298c297e6f782c2fdbb6a16056
-```
-
 ## Custom Event Tracking
 
-Milestones may be defined in a number of ways.  They may be defined at certain key gameplay points like finishing a tutorial, or may they refer to other important milestones in a player's lifecycle. PlayRM, by default, supports up to five custom milestones.  Players can be segmented based on when and how many times they have achieved a particular milestone.
+Custom Events may be used in a number of ways.  They can be used to track certain key in-app events such as finishing a tutorial or receiving a high score. They may also be used to track other important lifecycle events such as level up, zone unlocked, etc.  PlayRM, by default, supports up to five custom events.  You can then use these custom events to create more targeted custom segments.
+
+Each time a user completes a certain event, track it with this call:
 
 API Path: `/v1/milestone`
 Query Parameters: 
@@ -897,7 +700,7 @@ Query Parameters:
             <td><em>milestoneId</em></td>
             <td>Yes</td>
             <td>64-bit signed integer</td>
-            <td>a unique 64-bit numeric identifier for this milestone occurrence</td>
+            <td>a unique 64-bit numeric identifier for this custom event occurrence</td>
             <td><code>mi</code></td>  
         </tr>
         <tr>
@@ -905,7 +708,7 @@ Query Parameters:
             <td>Yes</td>
             <td>String, ASCII</td>
             <td>
-                The identifier for the milestone (case insensitive), must be CUSTOM1 through CUSTOM5. 
+               The name of the custom event should be "CUSTOMn", where n is 1 through 5.  The name is case-sensitive.
                 The <em>milestoneName</em> is case-sensitive.
             </td>
             <td><code>mn</code></td>
