@@ -16,10 +16,10 @@ Using the PlayRM RESTful API provides you with the flexibility to leverage PlayR
 
 The client SDKs do provide some additional functionality that is not available with a pure server-side integration:
 * Segmented messaging
-* Engagement module which allows PlayRM to track and score player intensity
+* A more robust Engagement module which allows PlayRM to track and score player intensity
 * Geo location of the player
 
-To access this functionality you'll want to implement the appropriate client-side SDK in your game client (JavaScript, iOS, Unity, Android, etc). The engagement module and the player geo location information are automatically once the SDK has been installed.
+To access this functionality you'll want to implement the appropriate client-side SDK in your game client (JavaScript, iOS, Unity, Android, etc). The detailed engagement module and the player geo location information are automatic once the SDK has been installed.
 
 These modules are available by calling the RESTful API:
  
