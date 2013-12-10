@@ -23,6 +23,7 @@ To access this functionality you'll want to implement the appropriate client-sid
 
 These modules are available by calling the RESTful API:
  
+* [Basic Engagement Module](#engagement) - provides bare-bone user engagement information
 * [UserInfo Module](#demographics-and-install-attribution) - provides basic user information
 * [Monetization Module](#monetization) - tracks various monetization events
 * [Milestone Module](#custom-event-tracking) - tracks pre-defined significant events in the game experience
@@ -33,6 +34,7 @@ Outline
     * [Common Parameters](#common-parameters)
     * [Instantiating the PHP Client](#instantiating-the-php-client)
     * [Signing Requests](#signing-requests)
+    * [Engagement](#engagement)
     * [Demographics and Install Attribution](#demographics-and-install-attribution)
     * [Monetization](#monetization)
         * [Purchases of In-Game Currency with Real Currency](#purchases-of-in-game-currency-with-real-currency)
@@ -174,6 +176,68 @@ private function sendRequest($path, $query_params) {
     return $response;
 }
 ```
+
+## Engagement
+To enable PlayRM reporting, and to predict a user's future life-time value, we will need as much Engagement data as possible.  For better predictions it is best to do a full SDK integration.  However, for basic server-to-server integration it is sufficient to include the following appStart call each time the user accesses your application.
+
+API Path: `v1/appStart`
+Query Parameters:
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Req?</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>URL Parameter</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><em>timestamp</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>t</code></td>
+        </tr>
+        <tr>
+            <td><em>appId</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>a</code></td>
+        </tr>
+        <tr>
+            <td><em>userId</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>u</code></td>
+        </tr>
+    </tbody>
+</table>
+
+Call with PHP REST Client:
+
+```php
+//send this request each time the user accesses your application.
+
+$args = array(
+    "user_id" => $player_ID,
+);
+
+$api_client->appStart($args);
+```
+
+Resulting HTTP GET:
+```
+http://api.a.playnomics.net/v1/appStart?
+    a=4104146557547035721&
+    t=1367945380&
+    u=123456&
+    sig=a8234a1a12295c594ec570f94d5b37ca58025dd781f0f110af6b26ab041fb6c7
+```
+
 
 ## Demographics and Install Attribution
 

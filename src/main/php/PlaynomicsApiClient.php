@@ -81,6 +81,13 @@ class PlaynomicsApiClient {
         return $this->sendRequest($path, $params);
     }
 
+    public function appStart($args) {
+        $path = "/v1/appStart";
+
+        $params = $this->getDefaultParams($args["user_id"]);
+        return $this->sendRequest($path, $params);
+    }
+
     private function getDefaultParams($user_id) {
         return array(
             "a" => $this->app_id,
