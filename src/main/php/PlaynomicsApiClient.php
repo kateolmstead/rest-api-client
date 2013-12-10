@@ -59,28 +59,6 @@ class PlaynomicsApiClient {
         return $this->sendRequest($path, $params);
     }
 
-    public function invitationSent($args) {
-        $path = "/v1/invitationSent";
-
-        $params = $this->getDefaultParams($args["user_id"]);
-        $params["ii"] = $args["invitation_id"];
-        $params["ir"] = $this->coaleseValue($args, "recipient_user_id");
-        $params["ia"] = $this->coaleseValue($args, "recipient_address");
-        $params["im"] = $this->coaleseValue($args, "method");
-        return $this->sendRequest($path, $params);
-    }
-
-    public function invitationResponse($args) {
-        $path = "/v1/invitationResponse";
-        $params = $this->getDefaultParams($args["user_id"]);
-        $params["ii"] = $args["invitation_id"];
-        $params["ir"] = $this->coaleseValue($args, "recipient_user_id");
-        
-        $invitation_response = "accepted";
-        $params["ie"] = $invitation_response;
-        return $this->sendRequest($path, $params);
-    }
-
     public function appStart($args) {
         $path = "/v1/appStart";
 
