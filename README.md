@@ -235,6 +235,7 @@ http://api.a.playnomics.net/v1/appStart?
     a=4104146557547035721&
     t=1367945380&
     u=123456&
+    s=0&i=0&z=0&b=0&
     sig=a8234a1a12295c594ec570f94d5b37ca58025dd781f0f110af6b26ab041fb6c7
 ```
 
