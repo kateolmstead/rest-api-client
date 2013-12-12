@@ -15,12 +15,32 @@ function main() {
     $api_key = $config->api_key;
     $player_one_id = 1;
 
-    $player_two_email = "player2@gmail.com";
     //set up the proxy to send requests through Charles Proxy
-    $proxy = "localhost:8888";
+    //$proxy = "localhost:8888";
     $api_client = new PlaynomicsApiClient($app_id, $api_key, $proxy);
     //don't log these events to your control panel dashboard
     $api_client->test_mode = true;
+
+    $args = array(
+        "user_id" => $player_one_id
+    );
+    echo "userInfo with args : ";
+    var_dump($args);
+    $api_client->appStart($args);
+
+    //report the demographic info that player1 fills out when she joins
+    $args = array(
+        "user_id" => $player_one_id,
+        "sex" => "F",
+        "birth_year" => 1980,
+        "source" => "invitation",
+        "source_user" => $player_one_id,
+        "source_campaign" => "UserReferral",
+        "install_time" => time()
+    );
+    echo "userInfo with args : ";
+    var_dump($args);
+    $api_client->userInfo($args);
 
     //player1 purchase in game currency
 
@@ -99,47 +119,6 @@ function main() {
     echo "milestone with args : ";
     var_dump($args);
     $api_client->milestone($args);
-
-    //player1 invites player2 to join the game
-    $invitation_id = rand(1, 100);
-    $args = array(
-        "user_id" => $player_one_id,
-        "invitation_id" => $invitation_id,
-        "recipient_address" => hash_hmac("sha256", $player_two_email, "INVITATION_KEY"),
-        "method" => "email"
-    );
-
-    echo "invitationSent with args : ";
-    var_dump($args);
-    $api_client->invitationSent($args);
-
-    //player two joins this game from the invitation that player_one sent
-
-    $player_two_id = 2;
-
-    //report the demographic info that player2 fills out when she joins
-    $args = array(
-        "user_id" => $player_two_id,
-        "sex" => "F",
-        "birth_year" => 1980,
-        "source" => "invitation",
-        "source_user" => $player_one_id,
-        "source_campaign" => "UserReferral",
-        "install_time" => time()
-    );
-    echo "userInfo with args : ";
-    var_dump($args);
-    $api_client->userInfo($args);
-    
-    //player2 accepts player1's invitations
-    $args = array(
-        "user_id" => $player_two_id,
-        "recipient_user_id" => $player_two_id,
-        "invitation_id" => $invitation_id
-    );
-    echo "invitationResponse with args : ";
-    var_dump($args);
-    $api_client->invitationResponse($args);
 }
 main();
 ?>

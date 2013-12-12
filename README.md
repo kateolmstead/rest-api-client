@@ -16,16 +16,16 @@ Using the PlayRM RESTful API provides you with the flexibility to leverage PlayR
 
 The client SDKs do provide some additional functionality that is not available with a pure server-side integration:
 * Segmented messaging
-* Engagement module which allows PlayRM to track and score player intensity
+* A more robust Engagement module which allows PlayRM to track and score player intensity
 * Geo location of the player
 
-To access this functionality you'll want to implement the appropriate client-side SDK in your game client (JavaScript, iOS, Unity, Android, etc). The engagement module and the player geo location information are automatically once the SDK has been installed.
+To access this functionality you'll want to implement the appropriate client-side SDK in your game client (JavaScript, iOS, Unity, Android, etc). The detailed engagement module and the player geo location information are automatic once the SDK has been installed.
 
 These modules are available by calling the RESTful API:
  
+* [Basic Engagement Module](#engagement) - provides bare-bone user engagement information
 * [UserInfo Module](#demographics-and-install-attribution) - provides basic user information
 * [Monetization Module](#monetization) - tracks various monetization events
-* [Viral Module](#invitations-and-virality) - tracks the social activities of users
 * [Milestone Module](#custom-event-tracking) - tracks pre-defined significant events in the game experience
 
 Outline
@@ -34,12 +34,12 @@ Outline
     * [Common Parameters](#common-parameters)
     * [Instantiating the PHP Client](#instantiating-the-php-client)
     * [Signing Requests](#signing-requests)
+    * [Engagement](#engagement)
     * [Demographics and Install Attribution](#demographics-and-install-attribution)
     * [Monetization](#monetization)
         * [Purchases of In-Game Currency with Real Currency](#purchases-of-in-game-currency-with-real-currency)
         * [Purchases of Items with Real Currency](#purchases-of-items-with-real-currency)
         * [Purchases of Items with Premium Currency](#purchases-of-items-with-premium-currency)
-    * [Invitations and Virality](#invitations-and-virality)
     * [Custom Event Tracking](#custom-event-tracking)
 * [Support Issues](#support-issues)
 
@@ -177,6 +177,69 @@ private function sendRequest($path, $query_params) {
 }
 ```
 
+## Engagement
+To enable PlayRM reporting, and to predict a user's future life-time value, we will need as much Engagement data as possible.  For better predictions it is best to do a full SDK integration.  However, for basic server-to-server integration it is sufficient to include the following appStart call each time the user accesses your application.
+
+API Path: `v1/appStart`
+Query Parameters:
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Req?</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>URL Parameter</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><em>timestamp</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>t</code></td>
+        </tr>
+        <tr>
+            <td><em>appId</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>a</code></td>
+        </tr>
+        <tr>
+            <td><em>userId</em></td>
+            <td>Yes</td>
+            <td>See description above.</td>
+            <td>See description above.</td>
+            <td><code>u</code></td>
+        </tr>
+    </tbody>
+</table>
+
+Call with PHP REST Client:
+
+```php
+//send this request each time the user accesses your application.
+
+$args = array(
+    "user_id" => $player_id
+);
+
+$api_client->appStart($args);
+```
+
+Resulting HTTP GET:
+```
+http://api.a.playnomics.net/v1/appStart?
+    a=4104146557547035721&
+    t=1367945380&
+    u=123456&
+    s=0&i=0&z=0&b=0&
+    sig=a8234a1a12295c594ec570f94d5b37ca58025dd781f0f110af6b26ab041fb6c7
+```
+
+
 ## Demographics and Install Attribution
 
 The userInfo module can be called to collect basic demographic and acquisition information. This data can be used to segment users based on how/where they were acquired, and enables improved targeting with basic demographics in addition to the behavioral data collected using other events.
@@ -309,7 +372,7 @@ Call with PHP REST Client:
 //report the demographic info that the player fills out when she joins
 
 $args = array(
-    "user_id" => $player_ID,
+    "user_id" => $player_id,
     "sex" => "F",
     "birth_year" => 1980,
     "source" => "invitation",
@@ -646,203 +709,6 @@ http://api.a.playnomics.net/v1/transaction?
     tv0=5&
     u=1&
     sig=2ae9493eab0ca20683433048193f754d63bfbcf0c4dcbe1381ea9a3d6eb51e2a
-```
-
-## Invitations and Virality
-
-The virality module allows you to track a singular invitation from one player to another (e.g., inviting friends to join a game on Facebook).
-
-API Path: `/v1/invitationSent`
-Query Parameters: 
-<table>
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Required?
-            </th>
-            <th>
-                Type
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                URL Parameter
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><em>timestamp</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>t</code></td>
-        </tr>
-        <tr>
-            <td><em>appID</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>a</code></td>
-        </tr>
-        <tr>
-            <td><em>userId</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>u</code></td>
-        </tr>
-        <tr>
-            <td><em>invitationId</em></td>
-            <td>Yes</td>
-            <td>64-bit signed integer</td>
-            <td>Application-assigned unique identifier for this invitation</td>  
-            <td><code>ii</code></td>
-        </tr>
-        <tr>
-            <td><em>recipientUserId</em></td>
-            <td>Optional</td>
-            <td>String, 64 char max, UTF-8</td>
-            <td>
-                The application's <em>userId</em> for the recipient of the invitation. This id should be the same id as the recipient has or would have in the player catalog. If this id is not known at the time the invitation is sent, this parameter should be excluded.
-            </td>
-            <td><code>ir</code></td>
-        </tr>
-        <tr>
-            <td><em>recipientAddress</em></td>
-            <td>Optional</td>
-            <td>String, 256 char max, UTF-8</td>
-            <td>
-                The address, specific the method being used, to send the invitation to the recipient, such as email address. In the case of email addresses or other personally identifiable information it should be hashed or otherwise obscured.
-            </td>
-            <td><code>a</code></td>
-        </tr>
-        <tr>
-            <td><em>method</em></td>
-            <td>Optional</td>
-            <td>String, 16 char max, ASCII</td>
-            <td>The type of invitation - e.g., email, in-game message</td>
-            <td><code>im</code></td>
-        </tr>
-    </tbody>
-</table>
-
-Call with PHP REST Client:
-```php
-$args = array(
-    "user_id" => $player_id,
-    "invitation_id" => $invitation_id,
-    "recipient_address" => hash_hmac("sha256", "player2@gmail.com", "INVITATION_KEY"),
-    "method" => "email"
-);
-
-$api_client->invitationSent($args);
-```
-Resulting HTTP GET:
-```
-http://api.b.playnomics.net/v1/invitationSent?
-    a=4104146557547035721&
-    ia=89ceb2b1a02bc693dcf175c14a05b6becd71be9fe2f3a5b049b72633d7968a64&
-    ii=36&
-    im=email&
-    t=1367941382&
-    u=1&
-    sig=edb83492c37a84cc638de52b5f51b4767484ef917ab97ca2653672336f5af14b
-```
-
-You can then track each invitation response. The important thing to note is that you will need to persist the *invitationId* in invitation callback URL (e.g. the link that the player two clicks on should contain the original *invitationId*).
-
-API Path: `/v1/invitationResponse`
-Query Parameters: 
-<table>
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Required?
-            </th>
-            <th>
-                Type
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                URL Parameter
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><em>timestamp</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>t</code></td>
-        </tr>
-        <tr>
-            <td><em>appID</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>a</code></td>
-        </tr>
-        <tr>
-            <td><em>userId</em></td>
-            <td>Yes</td>
-            <td>See description above.</td>
-            <td>See description above.</td>
-            <td><code>u</code></td>
-        </tr>
-        <tr>
-            <td><em>invitationId</em></td>
-            <td>Yes</td>
-            <td>64-bit signed integer</td>
-            <td>Unique identifier for this invitation, corresponding to the <em>nvitationId</em> in the InvitationSent event</td>
-            <td><code>ii</code></td>
-        </tr>
-        <tr>
-            <td><em>recipientUserId</em></td>
-            <td>Yes</td>
-            <td>String, 64 char max, UTF-8</td>
-            <td>The userId of the recipient</td>
-            <td><code>ir</code></td>
-        </tr>
-        <tr>
-            <td><em>response</em></td>
-            <td>Yes</td>
-            <td>String</td>
-            <td>Must be "accepted".</td>
-            <td><code>ie</code></td>
-        </tr>
-    </tbody>
-</table>
-
-Call with PHP REST Client:
-```php
-$args = array(
-    "user_id" => $player_two_id,
-    "recipient_user_id" => $player_two_id,
-    "invitation_id" => $invitation_id
-);
-$api_client->invitationResponse($args);
-```
-Resulting HTTP GET:
-```
-http://api.a.playnomics.net/v1/invitationResponse?
-    a=4104146557547035721&
-    ie=accepted&
-    ii=36&
-    ir=2&
-    t=1367941382&
-    u=2&
-    sig=50fe555c9db50d4f62dac60f4e48f119c0b5a3298c297e6f782c2fdbb6a16056
 ```
 
 ## Custom Event Tracking
