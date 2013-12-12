@@ -64,9 +64,9 @@ class PlaynomicsApiClient {
 
         $params = $this->getDefaultParams($args["user_id"]);
         $params["s"] = $this->getTimeStamp();
-        $params["i"] = 0;
-        $params["z"] = 0;
-        $params["b"] = 0;
+        $params["i"] = "0";
+        $params["z"] = "0";
+        $params["b"] = "0";
 
         return $this->sendRequest($path, $params);
     }
