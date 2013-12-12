@@ -21,6 +21,20 @@ function main() {
     //don't log these events to your control panel dashboard
     $api_client->test_mode = true;
 
+    //report the demographic info that player1 fills out when she joins
+    $args = array(
+        "user_id" => $player_one_id,
+        "sex" => "F",
+        "birth_year" => 1980,
+        "source" => "invitation",
+        "source_user" => $player_one_id,
+        "source_campaign" => "UserReferral",
+        "install_time" => time()
+    );
+    echo "userInfo with args : ";
+    var_dump($args);
+    $api_client->userInfo($args);
+
     //player1 purchase in game currency
 
     $transaction_id = rand(1, 100);
