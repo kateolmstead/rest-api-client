@@ -21,6 +21,13 @@ function main() {
     //don't log these events to your control panel dashboard
     $api_client->test_mode = true;
 
+    $args = array(
+        "user_id" => $player_one_id
+    );
+    echo "userInfo with args : ";
+    var_dump($args);
+    $api_client->appStart($args);
+
     //report the demographic info that player1 fills out when she joins
     $args = array(
         "user_id" => $player_one_id,
