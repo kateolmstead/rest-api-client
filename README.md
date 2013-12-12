@@ -223,7 +223,7 @@ Call with PHP REST Client:
 //send this request each time the user accesses your application.
 
 $args = array(
-    "user_id" => $player_ID,
+    "user_id" => $player_id
 );
 
 $api_client->appStart($args);
@@ -372,7 +372,7 @@ Call with PHP REST Client:
 //report the demographic info that the player fills out when she joins
 
 $args = array(
-    "user_id" => $player_ID,
+    "user_id" => $player_id,
     "sex" => "F",
     "birth_year" => 1980,
     "source" => "invitation",
