@@ -17,7 +17,7 @@ function main() {
 
     $player_two_email = "player2@gmail.com";
     //set up the proxy to send requests through Charles Proxy
-    $proxy = "localhost:8888";
+    //$proxy = "localhost:8888";
     $api_client = new PlaynomicsApiClient($app_id, $api_key, $proxy);
     //don't log these events to your control panel dashboard
     $api_client->test_mode = true;
