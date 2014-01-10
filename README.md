@@ -27,6 +27,12 @@ These modules are available by calling the RESTful API:
 * [Monetization Module](#monetization) - tracks various monetization events
 * [Custom Module](#custom-event-tracking) - tracks pre-defined significant events in the app experience
 
+Please note for AVP and Segmentation the following events are <strong>required</strong>:
+
+* /userinfo
+* /appstart
+* /transaction
+
 Outline
 =======
 * [Server-Side Integration](#server-side-integration)    
