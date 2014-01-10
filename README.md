@@ -29,7 +29,7 @@ These modules are available by calling the RESTful API:
 
 Please note for AVP and Segmentation the following events are <strong>required</strong>:
 
-* /userinfo
+* /userinfo ([Instructions](#demographics-and-install-attribution))
 * /appstart
 * /transaction
 
