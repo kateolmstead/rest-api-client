@@ -28,6 +28,12 @@ These modules are available by calling the RESTful API:
 * [Monetization Module](#monetization) - tracks various monetization events
 * [Milestone Module](#custom-event-tracking) - tracks pre-defined significant events in the game experience
 
+Please note for AVP and Segmentation the following events are <strong>required</strong>:
+
+* /userinfo ([Demographics and Install Attribution](#demographics-and-install-attribution))
+* /appstart ([Engagement](#engagement))
+* /transaction ([Monetization](#monetization))
+
 Outline
 =======
 * [Server-Side Integration](#server-side-integration)    
